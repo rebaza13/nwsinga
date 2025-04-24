@@ -1,7 +1,186 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
   failed: 'Action failed',
-  success: 'Action was successful'
+  success: 'Action was successful',
+
+  // Common
+  app: {
+    title: 'Property Management',
+    loading: 'Loading...',
+    error: 'An error occurred',
+    save: 'Save',
+    cancel: 'Cancel',
+    delete: 'Delete',
+    edit: 'Edit',
+    add: 'Add',
+    search: 'Search',
+    filter: 'Filter',
+    refresh: 'Refresh',
+    close: 'Close',
+    back: 'Back',
+    next: 'Next',
+    yes: 'Yes',
+    no: 'No',
+    confirm: 'Confirm',
+    actions: 'Actions',
+    all: 'All',
+    details: 'Details',
+    noData: 'No data available',
+    required: 'Required'
+  },
+
+  // Navigation
+  nav: {
+    home: 'Home',
+    dashboard: 'Dashboard',
+    properties: 'Properties',
+    tenants: 'Tenants',
+    contracts: 'Contracts',
+    rent: 'Rent',
+    settings: 'Settings'
+  },
+
+  // Dashboard
+  dashboard: {
+    title: 'Dashboard',
+    welcome: 'Welcome to Property Management',
+    quickActions: 'Quick Actions',
+    recentActivities: 'Recent Activities',
+    stats: 'Statistics',
+    tasks: 'Tasks',
+    addProperty: 'Add Property',
+    addTenant: 'Add Tenant',
+    recordPayment: 'Record Payment',
+    generateReport: 'Generate Report'
+  },
+
+  // Properties
+  properties: {
+    title: 'Properties',
+    manage: 'Manage Properties',
+    add: 'Add Property',
+    edit: 'Edit Property',
+    delete: 'Delete Property',
+    deleteConfirm: 'Are you sure you want to delete this property?',
+    name: 'Property Name',
+    type: 'Property Type',
+    address: 'Address',
+    price: 'Price',
+    status: 'Status',
+    squareMeters: 'Square Meters',
+    contactPhone: 'Contact Phone',
+    description: 'Description',
+    imageUrl: 'Image URL',
+    house: 'House',
+    apartment: 'Apartment',
+    shop: 'Shop',
+    available: 'Available',
+    sold: 'Sold',
+    rented: 'Rented',
+    addSuccess: 'Property added successfully',
+    updateSuccess: 'Property updated successfully',
+    deleteSuccess: 'Property deleted successfully',
+    filterByType: 'Filter by Type',
+    noProperties: 'No properties found',
+    addPropertyPrompt: 'Add your first property to get started'
+  },
+
+  // Tenants
+  tenants: {
+    title: 'Tenants',
+    manage: 'Manage Tenants',
+    add: 'Add Tenant',
+    edit: 'Edit Tenant',
+    delete: 'Delete Tenant',
+    deleteConfirm: 'Are you sure you want to delete this tenant?',
+    name: 'Name',
+    email: 'Email',
+    phone: 'Phone Number',
+    propertyType: 'Property Type',
+    leaseStart: 'Lease Start',
+    leaseEnd: 'Lease End',
+    addSuccess: 'Tenant added successfully',
+    updateSuccess: 'Tenant updated successfully',
+    deleteSuccess: 'Tenant deleted successfully',
+    noTenants: 'No tenants found',
+    addTenantPrompt: 'Add your first tenant to get started'
+  },
+
+  // Contracts
+  contracts: {
+    title: 'Contracts',
+    manage: 'Manage Contracts',
+    add: 'Add Contract',
+    edit: 'Edit Contract',
+    delete: 'Delete Contract',
+    deleteConfirm: 'Are you sure you want to delete this contract?',
+    contractTitle: 'Contract Title',
+    contractType: 'Contract Type',
+    startDate: 'Start Date',
+    endDate: 'End Date',
+    amount: 'Amount',
+    depositAmount: 'Deposit Amount',
+    isActive: 'Is Active',
+    createdBy: 'Created By',
+    notes: 'Notes',
+    sale: 'Sale Contract',
+    lease: 'Lease Agreement',
+    other: 'Other Contract',
+    active: 'Active',
+    inactive: 'Inactive',
+    addSuccess: 'Contract added successfully',
+    updateSuccess: 'Contract updated successfully',
+    deleteSuccess: 'Contract deleted successfully',
+    activeContracts: 'Active Contracts',
+    expiringSoon: 'Expiring Soon',
+    leaseIncome: 'Lease Income',
+    contractPeriod: 'Contract Period',
+    financialDetails: 'Financial Details',
+    additionalInfo: 'Additional Information',
+    noContracts: 'No contracts found',
+    addContractPrompt: 'Add your first contract to get started'
+  },
+
+  // Rent
+  rent: {
+    title: 'Rent',
+    manage: 'Manage Rent',
+    add: 'Add Rent Payment',
+    paymentHistory: 'Payment History',
+    paymentMonth: 'Payment Month',
+    paymentDate: 'Payment Date',
+    amount: 'Amount',
+    paymentMethod: 'Payment Method',
+    receiptNumber: 'Receipt Number',
+    notes: 'Notes',
+    cash: 'Cash',
+    bankTransfer: 'Bank Transfer',
+    check: 'Check',
+    creditCard: 'Credit Card',
+    other: 'Other',
+    addSuccess: 'Rent payment added successfully',
+    totalPayments: 'Total Payments',
+    noPayments: 'No payments found',
+    addPaymentPrompt: 'Add your first payment to get started'
+  },
+
+  // Settings
+  settings: {
+    title: 'Settings',
+    language: 'Language',
+    theme: 'Theme',
+    notifications: 'Notifications',
+    profile: 'Profile',
+    security: 'Security',
+    about: 'About',
+    logout: 'Logout',
+    darkMode: 'Dark Mode',
+    lightMode: 'Light Mode',
+    english: 'English',
+    kurdish: 'Kurdish',
+    saveSuccess: 'Settings saved successfully',
+    preview: 'Preview',
+    primary: 'Primary',
+    secondary: 'Secondary',
+    accent: 'Accent'
+  }
 };

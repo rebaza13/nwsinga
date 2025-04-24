@@ -1,0 +1,95 @@
+/* RTL-specific styles */
+
+/* Adjust padding and margins for RTL */
+[dir="rtl"] {
+  .q-item__section--side {
+    padding-right: 0;
+    padding-left: 16px;
+  }
+
+  .q-item__section--main {
+    padding-left: 0;
+    padding-right: 16px;
+  }
+
+  .q-field__before {
+    padding-right: 0;
+    padding-left: 12px;
+  }
+
+  .q-field__after {
+    padding-left: 0;
+    padding-right: 12px;
+  }
+
+  /* Flip icons that indicate direction */
+  .q-icon.material-icons:not(.q-spinner) {
+    &.arrow_back,
+    &.arrow_forward,
+    &.chevron_left,
+    &.chevron_right,
+    &.last_page,
+    &.first_page {
+      transform: scaleX(-1);
+    }
+  }
+
+  /* Adjust button groups */
+  .q-btn-group {
+    .q-btn:first-child {
+      border-radius: 0 4px 4px 0;
+    }
+    .q-btn:last-child {
+      border-radius: 4px 0 0 4px;
+    }
+  }
+
+  /* Adjust card actions */
+  .q-card__actions--horiz {
+    > .q-btn-item + .q-btn-item,
+    > .q-btn-group + .q-btn-item,
+    > .q-btn-item + .q-btn-group {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+  }
+
+  /* Adjust dialog positioning */
+  .q-dialog__inner--minimized {
+    > div {
+      max-width: 90vw;
+    }
+  }
+}
+
+/* Fix for input fields in RTL mode */
+[dir="rtl"] .q-field__native,
+[dir="rtl"] .q-field__input {
+  text-align: right;
+}
+
+/* Fix for tables in RTL mode */
+[dir="rtl"] .q-table th,
+[dir="rtl"] .q-table td {
+  text-align: right;
+}
+
+/* Fix for tabs in RTL mode */
+[dir="rtl"] .q-tabs__content {
+  flex-direction: row-reverse;
+}
+
+/* Fix for button icons in RTL mode */
+[dir="rtl"] .q-btn__content {
+  flex-direction: row-reverse;
+}
+
+/* Fix for list items in RTL mode */
+[dir="rtl"] .q-item {
+  flex-direction: row-reverse;
+}
+
+/* Fix for pagination in RTL mode */
+[dir="rtl"] .q-pagination__content {
+  flex-direction: row-reverse;
+}
