@@ -1,8 +1,10 @@
 {
-  "builds": [
-    { "src": "dist/spa/**/*", "use": "@vercel/static" }
-  ],
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+  "version": 2,
+  "buildCommand": "chmod +x vercel-build.sh && ./vercel-build.sh",
+  "outputDirectory": "dist/spa",
+  "framework": "vue",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
