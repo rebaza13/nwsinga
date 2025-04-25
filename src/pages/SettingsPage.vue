@@ -173,6 +173,9 @@ const hideTimeline = ref(localStorage.getItem('hideTimeline') === 'true');
 
 function toggleHideTimeline(value: boolean) {
   localStorage.setItem('hideTimeline', value.toString());
+
+  // Dispatch a custom event to notify other components about the setting change
+  window.dispatchEvent(new CustomEvent('settings-changed'));
 }
 
 // Get current language label

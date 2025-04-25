@@ -19,7 +19,10 @@
       </router-view>
     </q-page-container>
 
-    <q-footer elevated :class="isDark ? 'bg-dark text-white' : 'bg-white text-dark'" class="safe-area-bottom">
+    <q-footer :class="[
+        'safe-area-bottom',
+        isDark ? 'footer-dark' : 'footer-light'
+      ]">
       <q-tabs v-model="currentTab" active-color="primary" indicator-color="primary"
         :class="isDark ? 'tabs-dark' : 'tabs-light'" align="justify" narrow-indicator>
         <q-route-tab name="home" to="/" class="tab-item">
@@ -81,9 +84,19 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.q-footer {
+.footer-light {
+  background-color: white;
+  color: #333;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
 
+.footer-dark {
+  background-color: #1d1d1d;
+  color: white;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.q-footer {
   .q-tabs {
     height: 100%;
 
@@ -126,10 +139,6 @@ onMounted(() => {
 }
 
 .body--dark {
-  .q-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
   .q-tab {
     &--active {
       color: $primary;
@@ -142,6 +151,8 @@ onMounted(() => {
   color: #bdbdbd;
 
   .q-tab {
+    color: #bdbdbd;
+
     &--active {
       color: $primary;
     }

@@ -67,12 +67,26 @@ useI18n(); // Initialize i18n without extracting t
 // Timeline visibility setting
 const hideTimeline = ref(localStorage.getItem('hideTimeline') === 'true');
 
-// Update hideTimeline when localStorage changes
+// Function to check the localStorage value directly
+function checkHideTimelineSetting() {
+  hideTimeline.value = localStorage.getItem('hideTimeline') === 'true';
+}
+
+// Update hideTimeline when component mounts and when it becomes visible
 onMounted(() => {
+  // Check initial setting
+  checkHideTimelineSetting();
+
+  // Listen for storage events (when another tab changes localStorage)
   window.addEventListener('storage', (event) => {
     if (event.key === 'hideTimeline') {
       hideTimeline.value = event.newValue === 'true';
     }
+  });
+
+  // Create a custom event listener for settings changes within the same tab
+  window.addEventListener('settings-changed', () => {
+    checkHideTimelineSetting();
   });
 });
 
