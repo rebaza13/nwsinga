@@ -3,11 +3,11 @@
     <!-- Header Section -->
     <div class="row items-center q-mb-lg">
       <div class="col">
-        <h4 class="q-my-none text-weight-bold">Contracts</h4>
-        <p class="text-grey-8 q-mt-sm">Manage your rental contracts</p>
+        <h4 class="q-my-none text-weight-bold">{{ $t('contracts.title') }}</h4>
+        <p class="text-grey-8 q-mt-sm">{{ $t('contracts.manage') }}</p>
       </div>
       <div class="col-auto">
-        <q-btn color="primary" icon-right="refresh" label="Refresh" flat @click="refreshData" :loading="isLoading" />
+        <q-btn color="primary" icon-right="refresh" :label="$t('app.refresh')" flat @click="refreshData" :loading="isLoading" />
       </div>
     </div>
 
@@ -16,11 +16,11 @@
       <div class="col-12 col-sm-4">
         <q-card class="bg-primary text-white stat-card">
           <q-card-section>
-            <div class="text-h6">Active Contracts</div>
+            <div class="text-h6">{{ $t('contracts.activeContracts') }}</div>
             <div class="text-h3 q-mt-sm q-mb-xs">{{ contractStore.activeContracts.length }}</div>
             <div class="text-caption text-white-8">
               <q-icon name="description" size="16px" class="q-mr-xs" />
-              <span>Total contracts: {{ contractStore.contracts.length }}</span>
+              <span>{{ $t('app.total') }}: {{ contractStore.contracts.length }}</span>
             </div>
           </q-card-section>
         </q-card>
@@ -28,11 +28,11 @@
       <div class="col-12 col-sm-4">
         <q-card class="bg-warning text-white stat-card">
           <q-card-section>
-            <div class="text-h6">Expiring Soon</div>
+            <div class="text-h6">{{ $t('contracts.expiringSoon') }}</div>
             <div class="text-h3 q-mt-sm q-mb-xs">{{ contractStore.expiringSoonContracts.length }}</div>
             <div class="text-caption text-white-8">
               <q-icon name="schedule" size="16px" class="q-mr-xs" />
-              <span>Contracts expiring in 30 days</span>
+              <span>{{ $t('contracts.expiringIn30Days') }}</span>
             </div>
           </q-card-section>
         </q-card>
@@ -40,11 +40,11 @@
       <div class="col-12 col-sm-4">
         <q-card class="bg-positive text-white stat-card">
           <q-card-section>
-            <div class="text-h6">Lease Income</div>
+            <div class="text-h6">{{ $t('contracts.leaseIncome') }}</div>
             <div class="text-h3 q-mt-sm q-mb-xs">{{ formatCurrency(contractStore.totalMonthlyIncome) }}</div>
             <div class="text-caption text-white-8">
               <q-icon name="payments" size="16px" class="q-mr-xs" />
-              <span>From active lease contracts</span>
+              <span>{{ $t('contracts.fromActiveLeases') }}</span>
             </div>
           </q-card-section>
         </q-card>
@@ -53,8 +53,8 @@
 
     <!-- Contract List with Add Button -->
     <div class="row items-center justify-between q-mb-md">
-      <div class="text-h6">Contract List</div>
-      <q-btn color="primary" icon="add_circle" label="New Contract" @click="showAddContractDialog = true" />
+      <div class="text-h6">{{ $t('contracts.contractList') }}</div>
+      <q-btn color="primary" icon="add_circle" :label="$t('contracts.add')" @click="showAddContractDialog = true" />
     </div>
 
     <contract-list />
@@ -63,7 +63,7 @@
     <q-dialog v-model="showAddContractDialog" persistent maximized>
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">Create New Contract</div>
+          <div class="text-h6">{{ $t('contracts.add') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
@@ -79,9 +79,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import ContractList from 'src/components/ContractListNew.vue';
 import ContractForm from 'src/components/ContractFormNew.vue';
 import { useContractStore } from 'src/stores/contract-store';
+
+useI18n(); // Initialize i18n
 const $q = useQuasar();
 
 const contractStore = useContractStore();
@@ -119,7 +122,7 @@ async function onContractAdded() {
   // Show success notification
   $q.notify({
     color: 'positive',
-    message: 'Contract created successfully',
+    message: $t('contracts.addSuccess'),
     icon: 'check_circle',
     position: 'top'
   });

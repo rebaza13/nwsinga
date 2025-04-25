@@ -23,6 +23,7 @@ export default {
     confirm: 'Confirm',
     actions: 'Actions',
     all: 'All',
+    total: 'Total',
     details: 'Details',
     noData: 'No data available',
     required: 'Required'
@@ -138,13 +139,16 @@ export default {
     financialDetails: 'Financial Details',
     additionalInfo: 'Additional Information',
     noContracts: 'No contracts found',
-    addContractPrompt: 'Add your first contract to get started'
+    addContractPrompt: 'Add your first contract to get started',
+    contractList: 'Contract List',
+    expiringIn30Days: 'Contracts expiring in 30 days',
+    fromActiveLeases: 'From active lease contracts'
   },
 
   // Rent
   rent: {
     title: 'Rent',
-    manage: 'Manage Rent',
+    manage: 'Manage Rent Payments',
     add: 'Add Rent Payment',
     paymentHistory: 'Payment History',
     paymentMonth: 'Payment Month',
@@ -159,9 +163,22 @@ export default {
     creditCard: 'Credit Card',
     other: 'Other',
     addSuccess: 'Rent payment added successfully',
-    totalPayments: 'Total Payments',
+    totalPayments: 'Total Rent Collected',
     noPayments: 'No payments found',
-    addPaymentPrompt: 'Add your first payment to get started'
+    addPaymentPrompt: 'Add your first payment to get started',
+    allTime: 'All time',
+    thisMonth: 'This Month',
+    totalTenants: 'Total tenants',
+    filterByBuilding: 'Filter by Building',
+    noBuildings: 'No buildings available',
+    addBuilding: 'Add New Building',
+    tenantsIn: 'Tenants in {building}',
+    allTenants: 'All Tenants',
+    backToTenants: 'Back to Tenants',
+    recordPayment: 'Record Payment',
+    paymentSuccess: 'Payment recorded successfully',
+    paymentRecordedError: 'Payment recorded but there was an error refreshing the data',
+    buildingAddSuccess: 'Building added successfully'
   },
 
   // Settings

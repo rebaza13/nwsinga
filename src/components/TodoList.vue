@@ -14,11 +14,11 @@
           <q-item-section>
             <q-item-label :class="{ 'text-strike': task.done }">{{ task.title }}</q-item-label>
             <div class="row items-center">
-              <q-item-label caption class="q-mr-sm">{{ typeof task.due === 'string' ? task.due : new
+              <q-item-label caption :class="$q.lang.rtl ? 'q-ml-sm' : 'q-mr-sm'">{{ typeof task.due === 'string' ? task.due : new
                 Date(task.due).toLocaleDateString() }}</q-item-label>
               <q-badge :color="task.priority === 'high' ? 'negative' : task.priority === 'medium' ? 'warning' : 'grey'"
                 text-color="white" class="q-px-xs">
-                {{ task.priority }}
+                {{ $t(`tasks.${task.priority}`) }}
               </q-badge>
             </div>
           </q-item-section>
@@ -57,7 +57,7 @@
                 <q-item-section>
                   <q-item-label>
                     <q-badge :color="opt === 'high' ? 'negative' : opt === 'medium' ? 'warning' : 'grey'"
-                      text-color="white" class="q-mr-sm">
+                      text-color="white" :class="$q.lang.rtl ? 'q-ml-sm' : 'q-mr-sm'">
                       {{ $t(`tasks.${opt}`) }}
                     </q-badge>
                   </q-item-label>
@@ -67,7 +67,7 @@
           </q-select>
         </q-card-section>
 
-        <q-card-actions align="right">
+        <q-card-actions :align="$q.lang.rtl ? 'left' : 'right'">
           <q-btn flat :label="$t('app.cancel')" color="primary" v-close-popup />
           <q-btn flat :label="$t('tasks.addTask')" color="primary" @click="addTask" v-close-popup />
         </q-card-actions>
@@ -79,10 +79,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
 import { useTaskStore } from 'src/stores/task-store';
 import type { Task } from 'src/models/property';
 
 useI18n(); // Initialize i18n without extracting t
+const $q = useQuasar();
 
 const taskStore = useTaskStore();
 const showAddTask = ref(false);

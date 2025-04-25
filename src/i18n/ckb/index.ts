@@ -23,6 +23,7 @@ export default {
     confirm: 'دڵنیاکردنەوە',
     actions: 'کردارەکان',
     all: 'هەموو',
+    total: 'کۆی گشتی',
     details: 'وردەکاری',
     noData: 'هیچ داتایەک نییە',
     required: 'پێویستە'
@@ -138,13 +139,16 @@ export default {
     financialDetails: 'وردەکاری دارایی',
     additionalInfo: 'زانیاری زیاتر',
     noContracts: 'هیچ گرێبەستێک نەدۆزرایەوە',
-    addContractPrompt: 'یەکەم گرێبەستت زیاد بکە بۆ دەستپێکردن'
+    addContractPrompt: 'یەکەم گرێبەستت زیاد بکە بۆ دەستپێکردن',
+    contractList: 'لیستی گرێبەستەکان',
+    expiringIn30Days: 'گرێبەستەکان لە ماوەی ٣٠ ڕۆژدا بەسەردەچن',
+    fromActiveLeases: 'لە گرێبەستە چالاکەکانەوە'
   },
 
   // Rent
   rent: {
     title: 'کرێ',
-    manage: 'بەڕێوەبردنی کرێ',
+    manage: 'بەڕێوەبردنی پارەدانی کرێ',
     add: 'زیادکردنی پارەدانی کرێ',
     paymentHistory: 'مێژووی پارەدان',
     paymentMonth: 'مانگی پارەدان',
@@ -159,9 +163,22 @@ export default {
     creditCard: 'کارتی بانکی',
     other: 'تر',
     addSuccess: 'پارەدانی کرێ بە سەرکەوتوویی زیادکرا',
-    totalPayments: 'کۆی پارەدانەکان',
+    totalPayments: 'کۆی کرێی کۆکراوە',
     noPayments: 'هیچ پارەدانێک نەدۆزرایەوە',
-    addPaymentPrompt: 'یەکەم پارەدانت زیاد بکە بۆ دەستپێکردن'
+    addPaymentPrompt: 'یەکەم پارەدانت زیاد بکە بۆ دەستپێکردن',
+    allTime: 'هەموو کات',
+    thisMonth: 'ئەم مانگە',
+    totalTenants: 'کۆی کرێچییەکان',
+    filterByBuilding: 'فلتەر بەپێی بینا',
+    noBuildings: 'هیچ بینایەک بەردەست نییە',
+    addBuilding: 'زیادکردنی بینای نوێ',
+    tenantsIn: 'کرێچییەکان لە {building}',
+    allTenants: 'هەموو کرێچییەکان',
+    backToTenants: 'گەڕانەوە بۆ کرێچییەکان',
+    recordPayment: 'تۆمارکردنی پارەدان',
+    paymentSuccess: 'پارەدان بە سەرکەوتوویی تۆمارکرا',
+    paymentRecordedError: 'پارەدان تۆمارکرا بەڵام هەڵەیەک ڕوویدا لە نوێکردنەوەی داتاکان',
+    buildingAddSuccess: 'بینا بە سەرکەوتوویی زیادکرا'
   },
 
   // Settings

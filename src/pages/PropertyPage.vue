@@ -3,12 +3,12 @@
     <!-- Header Section -->
     <div class="row items-center q-mb-lg">
       <div class="col">
-        <h4 class="q-my-none text-weight-bold">Property Management</h4>
-        <p class="text-grey-8 q-mt-sm">Manage your properties</p>
+        <h4 class="q-my-none text-weight-bold">{{ $t('properties.title') }}</h4>
+        <p class="text-grey-8 q-mt-sm">{{ $t('properties.manage') }}</p>
       </div>
       <div class="col-auto">
-        <q-btn color="primary" icon-right="add" label="Add Property" @click="showAddPropertyDialog = true" />
-        <q-btn color="primary" flat icon-right="refresh" label="Refresh" class="q-ml-sm" @click="refreshData"
+        <q-btn color="primary" icon-right="add" :label="$t('properties.add')" @click="showAddPropertyDialog = true" />
+        <q-btn color="primary" flat icon-right="refresh" :label="$t('app.refresh')" class="q-ml-sm" @click="refreshData"
           :loading="isLoading" />
       </div>
     </div>
@@ -16,7 +16,7 @@
     <!-- Filter Section -->
     <div class="row q-mb-md">
       <div class="col-12 col-md-4">
-        <q-select v-model="selectedType" :options="propertyTypes" label="Filter by Type" outlined dense clearable
+        <q-select v-model="selectedType" :options="propertyTypes" :label="$t('properties.filterByType')" outlined dense clearable
           @update:model-value="filterProperties">
           <template v-slot:prepend>
             <q-icon name="category" />
@@ -32,14 +32,14 @@
           <q-img :src="property.imageUrl || 'https://placehold.co/600x400?text=Property'" height="200px">
             <div class="absolute-top-right q-pa-xs">
               <q-badge :color="getStatusColor(property.status)" class="text-capitalize">
-                {{ property.status }}
+                {{ $t(`properties.${property.status}`) }}
               </q-badge>
             </div>
           </q-img>
 
           <q-card-section>
             <div class="text-h6 ellipsis">{{ property.name }}</div>
-            <div class="text-subtitle2 text-grey-8">{{ property.type }}</div>
+            <div class="text-subtitle2 text-grey-8">{{ $t(`properties.${property.type.toLowerCase()}`) }}</div>
 
             <div class="row q-mt-sm items-center">
               <q-icon name="location_on" size="xs" color="grey-7" />
@@ -65,7 +65,7 @@
           <q-separator />
 
           <q-card-actions>
-            <q-btn flat color="primary" icon="edit" label="Edit" @click="editProperty(property)" />
+            <q-btn flat color="primary" icon="edit" :label="$t('app.edit')" @click="editProperty(property)" />
             <q-space />
             <q-btn flat color="negative" icon="delete" @click="confirmDeleteProperty(property)" />
           </q-card-actions>
@@ -75,9 +75,9 @@
       <!-- Empty State -->
       <div v-if="filteredProperties.length === 0" class="col-12 text-center q-pa-xl">
         <q-icon name="home_work" size="100px" color="grey-4" />
-        <div class="text-h6 text-grey-6 q-mt-md">No properties found</div>
-        <div class="text-grey-6 q-mb-md">Add your first property to get started</div>
-        <q-btn color="primary" icon="add" label="Add Property" @click="showAddPropertyDialog = true" />
+        <div class="text-h6 text-grey-6 q-mt-md">{{ $t('properties.noProperties') }}</div>
+        <div class="text-grey-6 q-mb-md">{{ $t('properties.addPropertyPrompt') }}</div>
+        <q-btn color="primary" icon="add" :label="$t('properties.add')" @click="showAddPropertyDialog = true" />
       </div>
     </div>
 
@@ -85,7 +85,7 @@
     <q-dialog v-model="showAddPropertyDialog" persistent maximized>
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ editMode ? 'Edit Property' : 'Add New Property' }}</div>
+          <div class="text-h6">{{ editMode ? $t('properties.edit') : $t('properties.add') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
@@ -102,12 +102,12 @@
       <q-card>
         <q-card-section class="row items-center">
           <q-avatar icon="warning" color="negative" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this property?</span>
+          <span class="q-ml-sm">{{ $t('properties.deleteConfirm') }}</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn flat label="Delete" color="negative" @click="deleteProperty" :loading="isDeleting" />
+          <q-btn flat :label="$t('app.cancel')" color="primary" v-close-popup />
+          <q-btn flat :label="$t('app.delete')" color="negative" @click="deleteProperty" :loading="isDeleting" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -117,9 +117,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import PropertyForm from 'src/components/PropertyForm.vue';
 import { usePropertyStore } from 'src/stores/property-store';
 import type { Property } from 'src/models/property';
+
+useI18n(); // Initialize i18n
 
 const $q = useQuasar();
 const propertyStore = usePropertyStore();
@@ -157,7 +160,7 @@ async function refreshData() {
     console.error('Error refreshing data:', error);
     $q.notify({
       color: 'negative',
-      message: 'Failed to load data',
+      message: $t('app.error'),
       icon: 'error'
     });
   } finally {
@@ -190,7 +193,7 @@ async function deleteProperty() {
 
     $q.notify({
       color: 'positive',
-      message: 'Property deleted successfully',
+      message: $t('properties.deleteSuccess'),
       icon: 'check_circle'
     });
 
@@ -200,7 +203,7 @@ async function deleteProperty() {
     console.error('Error deleting property:', error);
     $q.notify({
       color: 'negative',
-      message: 'Failed to delete property',
+      message: $t('app.error'),
       icon: 'error'
     });
   } finally {
@@ -214,7 +217,7 @@ function onPropertyAdded(): void {
 
   $q.notify({
     color: 'positive',
-    message: 'Property added successfully',
+    message: $t('properties.addSuccess'),
     icon: 'check_circle'
   });
 }
@@ -225,7 +228,7 @@ function onPropertyUpdated(): void {
 
   $q.notify({
     color: 'positive',
-    message: 'Property updated successfully',
+    message: $t('properties.updateSuccess'),
     icon: 'check_circle'
   });
 }
