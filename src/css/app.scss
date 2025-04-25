@@ -3,6 +3,9 @@
 // Import RTL styles
 @import 'rtl.scss';
 
+// Import form styles
+@import 'forms.scss';
+
 // Global styles
 body {
   font-family: 'Roboto', sans-serif;
@@ -116,14 +119,39 @@ body {
   transform: translateY(20px);
 }
 
-// Custom card styles
-.custom-card {
-  transition: transform 0.3s, box-shadow 0.3s;
+// Global card and shadow styles
+.custom-card, .q-card {
+  transition: transform 0.3s, border 0.3s;
   border-radius: 12px;
+  box-shadow: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Override Quasar shadow classes
+.shadow-1, .shadow-2, .shadow-3, .shadow-4, .shadow-5,
+.shadow-6, .shadow-7, .shadow-8, .shadow-9, .shadow-10 {
+  box-shadow: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+// Dark mode card styles
+.body--dark {
+  .custom-card, .q-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .shadow-1, .shadow-2, .shadow-3, .shadow-4, .shadow-5,
+  .shadow-6, .shadow-7, .shadow-8, .shadow-9, .shadow-10 {
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
 

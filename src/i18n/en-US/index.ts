@@ -199,7 +199,14 @@ export default {
     preview: 'Preview',
     primary: 'Primary',
     secondary: 'Secondary',
-    accent: 'Accent'
+    accent: 'Accent',
+    hideTimeline: 'Hide Timeline',
+    hideTimelineDesc: 'Hide the recent activities timeline on the home page',
+    appearance: 'Appearance',
+    display: 'Display',
+    dataExport: 'Data Export',
+    export: 'Export',
+    exportSuccess: '{type} data exported successfully'
   },
 
   // Tasks

@@ -40,11 +40,11 @@
 
     <!-- Todo List and Recent Activities -->
     <div class="row q-col-gutter-md">
-      <div class="col-12 col-md-6">
+      <div :class="hideTimeline ? 'col-12' : 'col-12 col-md-6'">
         <div class="text-h6 q-mb-sm">{{ $t('dashboard.tasks') }}</div>
         <todo-list />
       </div>
-      <div class="col-12 col-md-6">
+      <div v-if="!hideTimeline" class="col-12 col-md-6">
         <div class="text-h6 q-mb-sm">{{ $t('dashboard.recentActivities') }}</div>
         <recent-activities />
       </div>
@@ -55,6 +55,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { ref, onMounted } from 'vue';
 import DashboardStats from 'src/components/DashboardStats.vue';
 import TodoList from 'src/components/TodoList.vue';
 import QuickActionCard from 'src/components/QuickActionCard.vue';
@@ -62,6 +63,18 @@ import RecentActivities from 'src/components/RecentActivities.vue';
 
 const router = useRouter();
 useI18n(); // Initialize i18n without extracting t
+
+// Timeline visibility setting
+const hideTimeline = ref(localStorage.getItem('hideTimeline') === 'true');
+
+// Update hideTimeline when localStorage changes
+onMounted(() => {
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'hideTimeline') {
+      hideTimeline.value = event.newValue === 'true';
+    }
+  });
+});
 
 function navigateTo(path: string): void {
   void router.push(path); // Use void operator to explicitly ignore the promise

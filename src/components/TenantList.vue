@@ -1,14 +1,12 @@
 <template>
-  <q-card class="tenant-list-card">
-    <q-card-section>
-      <div class="row items-center justify-between q-mb-md">
-        <div class="text-h6">Tenants</div>
-        <q-input v-model="search" dense outlined placeholder="Search tenants" class="search-input">
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </div>
+  <div class="tenant-list-container">
+    <div class="row items-center justify-between q-mb-md q-px-md">
+      <q-input v-model="search" dense outlined placeholder="Search tenants" class="search-input">
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+    </div>
 
       <!-- Desktop view: Table -->
       <q-table v-if="$q.screen.gt.xs" :rows="filteredTenants" :columns="columns" row-key="id"
@@ -63,8 +61,7 @@
           <div>No tenants found.</div>
         </div>
       </div>
-    </q-card-section>
-  </q-card>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -195,8 +192,8 @@ function viewPaymentHistory(tenant: Tenant) {
 </script>
 
 <style lang="scss" scoped>
-.tenant-list-card {
-  border-radius: 12px;
+.tenant-list-container {
+  width: 100%;
 }
 
 .search-input {
@@ -217,6 +214,22 @@ function viewPaymentHistory(tenant: Tenant) {
   .search-input {
     width: 100%;
     margin-top: 8px;
+  }
+}
+
+:deep(.q-table) {
+  background: transparent;
+
+  th {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+}
+
+.body--dark {
+  :deep(.q-table) {
+    th {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
   }
 }
 </style>

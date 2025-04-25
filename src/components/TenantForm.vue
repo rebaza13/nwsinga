@@ -2,32 +2,64 @@
   <div class="tenant-form">
     <q-form @submit="submitTenant" class="q-gutter-md">
       <!-- Tenant Information -->
-      <div class="row q-mb-md">
-        <div class="col-12">
-          <div class="text-subtitle1 text-weight-medium">Tenant Information</div>
-        </div>
-
-        <!-- Name -->
-        <div class="col-12 col-md-6 q-pr-md-md q-mb-md">
+      <div class="form-section">
+        <div class="form-section__title">Tenant Information</div>
+        <div class="form-grid">
+          <!-- Name -->
           <q-input v-model="form.name" label="Tenant Name *" outlined dense
             :rules="[val => !!val || 'Name is required']" />
-        </div>
 
-        <!-- Email -->
-        <div class="col-12 col-md-6 q-mb-md">
+          <!-- Email -->
           <q-input v-model="form.email" label="Email *" type="email" outlined dense :rules="[
             val => !!val || 'Email is required',
             val => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val) || 'Please enter a valid email'
           ]" />
-        </div>
 
-        <!-- Phone -->
-        <div class="col-12 col-md-6 q-pr-md-md q-mb-md">
+          <!-- Phone -->
           <q-input v-model="form.phone" label="Phone *" outlined dense :rules="[val => !!val || 'Phone is required']" />
         </div>
+      </div>
 
-        <!-- Property Type -->
-        <div class="col-12 col-md-6 q-mb-md">
+      <!-- Property Information -->
+      <div class="form-section">
+        <div class="form-section__title">Property Information</div>
+        <div class="form-grid">
+          <!-- Building -->
+          <q-select v-model="form.buildingId" :options="buildingOptions" label="Building *"
+            option-label="label" option-value="value" map-options emit-value
+            outlined dense :rules="[val => !!val || 'Building is required']"
+            @update:model-value="onBuildingChange">
+            <template v-slot:option="{ itemProps, opt }">
+              <q-item v-bind="itemProps">
+                <q-item-section>
+                  <q-item-label>{{ opt.label }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+
+          <!-- Property -->
+          <q-select v-model="form.propertyId" :options="filteredProperties" label="Property *"
+            option-label="label" option-value="value" map-options emit-value
+            outlined dense :rules="[val => !!val || 'Property is required']"
+            :disable="!form.buildingId">
+            <template v-slot:option="{ itemProps, opt }">
+              <q-item v-bind="itemProps">
+                <q-item-section>
+                  <q-item-label>{{ opt.label }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No properties available for this building
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+
+          <!-- Property Type -->
           <q-select v-model="form.propertyType" :options="['House', 'Apartment', 'Shop']" label="Property Type *"
             outlined dense :rules="[val => !!val || 'Property type is required']">
             <template v-slot:option="{ itemProps, opt }">
@@ -39,18 +71,13 @@
             </template>
           </q-select>
         </div>
-
-
       </div>
 
       <!-- Lease Information -->
-      <div class="row q-mb-md">
-        <div class="col-12">
-          <div class="text-subtitle1 text-weight-medium">Lease Information</div>
-        </div>
-
-        <!-- Lease Start -->
-        <div class="col-12 col-md-6 q-pr-md-md q-mb-md">
+      <div class="form-section">
+        <div class="form-section__title">Lease Information</div>
+        <div class="form-grid">
+          <!-- Lease Start -->
           <q-input v-model="form.leaseStart" label="Lease Start Date *" outlined dense
             :rules="[val => !!val || 'Lease start date is required']">
             <template v-slot:append>
@@ -61,10 +88,8 @@
               </q-icon>
             </template>
           </q-input>
-        </div>
 
-        <!-- Lease End -->
-        <div class="col-12 col-md-6 q-mb-md">
+          <!-- Lease End -->
           <q-input v-model="form.leaseEnd" label="Lease End Date *" outlined dense :rules="[
             val => !!val || 'Lease end date is required',
             val => new Date(val) > new Date(form.leaseStart) || 'End date must be after start date'
@@ -77,23 +102,24 @@
               </q-icon>
             </template>
           </q-input>
+
+          <!-- Monthly Rent -->
+          <q-input v-model.number="form.monthlyRent" label="Monthly Rent *" type="number" outlined dense
+            :rules="[val => !!val || 'Monthly rent is required']" prefix="$" />
         </div>
       </div>
 
       <!-- Additional Information -->
-      <div class="row q-mb-md">
-        <div class="col-12">
-          <div class="text-subtitle1 text-weight-medium">Additional Information</div>
-        </div>
-
-        <!-- Notes -->
-        <div class="col-12 q-mb-md">
-          <q-input v-model="form.notes" label="Notes" type="textarea" outlined dense autogrow />
+      <div class="form-section">
+        <div class="form-section__title">Additional Information</div>
+        <div class="form-grid">
+          <!-- Notes -->
+          <q-input v-model="form.notes" label="Notes" type="textarea" outlined dense autogrow class="col-span-full" />
         </div>
       </div>
 
       <!-- Submit Button -->
-      <div class="row justify-end q-mt-md">
+      <div class="form-footer row justify-end q-mt-md">
         <q-btn label="Cancel" flat color="negative" class="q-mr-sm" @click="$emit('cancel')" :disable="loading" />
         <q-btn label="Add Tenant" type="submit" color="primary" :loading="loading" />
       </div>
@@ -102,10 +128,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { usePropertyStore } from 'src/stores/property-store';
+import { useBuildingStore } from 'src/stores/building-store';
 import type { Tenant } from 'src/models/property';
+
+const props = defineProps({
+  buildingId: {
+    type: String,
+    default: null
+  }
+});
 
 const emit = defineEmits<{
   (e: 'tenant-added'): void;
@@ -114,6 +148,7 @@ const emit = defineEmits<{
 
 const $q = useQuasar();
 const propertyStore = usePropertyStore();
+const buildingStore = useBuildingStore();
 const loading = ref(false);
 
 // Form data
@@ -121,16 +156,57 @@ const form = ref({
   name: '',
   email: '',
   phone: '',
+  buildingId: props.buildingId || '',
+  propertyId: '',
   propertyType: 'Apartment', // One of: 'House', 'Apartment', 'Shop'
   leaseStart: new Date().toISOString().split('T')[0],
   leaseEnd: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+  monthlyRent: 1000,
   notes: ''
 });
 
-// No need to load properties anymore
-onMounted(async () => {
-  // Nothing to initialize
+// Building options for select
+const buildingOptions = computed(() => {
+  return buildingStore.buildings.map(building => ({
+    label: building.name,
+    value: building.id
+  }));
 });
+
+// Filtered properties based on selected building
+const filteredProperties = computed(() => {
+  if (!form.value.buildingId) return [];
+
+  return propertyStore.properties
+    .filter(property => property.buildingId === form.value.buildingId)
+    .map(property => ({
+      label: property.name,
+      value: property.id
+    }));
+});
+
+// Load buildings and properties
+onMounted(async () => {
+  if (buildingStore.buildings.length === 0) {
+    await buildingStore.fetchBuildings();
+  }
+
+  if (propertyStore.properties.length === 0) {
+    await propertyStore.fetchProperties();
+  }
+
+  // If buildingId is provided, filter properties
+  if (props.buildingId) {
+    form.value.buildingId = props.buildingId;
+  }
+});
+
+// Handle building change
+function onBuildingChange(_: string) {
+  console.log(_)
+  // Reset property selection when building changes
+  form.value.propertyId = '';
+}
 
 async function submitTenant() {
   loading.value = true;
@@ -140,9 +216,12 @@ async function submitTenant() {
       name: form.value.name,
       email: form.value.email,
       phone: form.value.phone,
-      propertyType: form.value.propertyType, // Include the property type
+      buildingId: form.value.buildingId,
+      propertyId: form.value.propertyId,
+      propertyType: form.value.propertyType,
       leaseStart: form.value.leaseStart,
-      leaseEnd: form.value.leaseEnd
+      leaseEnd: form.value.leaseEnd,
+      monthlyRent: form.value.monthlyRent
     };
 
     // Add tenant to Firestore
@@ -159,9 +238,12 @@ async function submitTenant() {
       name: '',
       email: '',
       phone: '',
-      propertyType: 'Apartment', // One of: 'House', 'Apartment', 'Shop'
+      buildingId: props.buildingId || '',
+      propertyId: '',
+      propertyType: 'Apartment',
       leaseStart: new Date().toISOString().split('T')[0],
       leaseEnd: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+      monthlyRent: 1000,
       notes: ''
     };
 
@@ -184,5 +266,32 @@ async function submitTenant() {
 .tenant-form {
   max-width: 800px;
   margin: 0 auto;
+  padding-bottom: 60px; // Space for the sticky footer
+}
+
+.col-span-full {
+  grid-column: 1 / -1;
+}
+
+// Mobile optimizations
+@media (max-width: 599px) {
+  .tenant-form {
+    padding: 0;
+  }
+
+  .form-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: white;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+    z-index: 100;
+  }
+
+  .body--dark .form-footer {
+    background: #1d1d1d;
+  }
 }
 </style>

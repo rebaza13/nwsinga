@@ -199,7 +199,14 @@ export default {
     preview: 'پێشبینین',
     primary: 'سەرەکی',
     secondary: 'لاوەکی',
-    accent: 'جەختکردنەوە'
+    accent: 'جەختکردنەوە',
+    hideTimeline: 'شاردنەوەی کات',
+    hideTimelineDesc: 'شاردنەوەی چالاکییە نوێیەکان لە پەڕەی سەرەکی',
+    appearance: 'ڕووکار',
+    display: 'پیشاندان',
+    dataExport: 'هەناردەکردنی داتا',
+    export: 'هەناردەکردن',
+    exportSuccess: 'داتای {type} بە سەرکەوتوویی هەناردە کرا'
   },
 
   // Tasks

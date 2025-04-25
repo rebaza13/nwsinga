@@ -20,9 +20,8 @@
     </q-page-container>
 
     <q-footer elevated :class="isDark ? 'bg-dark text-white' : 'bg-white text-dark'" class="safe-area-bottom">
-      <q-tabs v-model="currentTab" :active-color="isDark ? 'primary' : 'primary'"
-        :indicator-color="isDark ? 'primary' : 'primary'" :class="[isDark ? 'text-grey-5' : 'text-grey-8']"
-        align="justify" narrow-indicator>
+      <q-tabs v-model="currentTab" active-color="primary" indicator-color="primary"
+        :class="isDark ? 'tabs-dark' : 'tabs-light'" align="justify" narrow-indicator>
         <q-route-tab name="home" to="/" class="tab-item">
           <div class="column items-center">
             <q-icon name="home" size="24px" class="animate-pop" />
@@ -134,6 +133,36 @@ onMounted(() => {
   .q-tab {
     &--active {
       color: $primary;
+    }
+  }
+}
+
+.tabs-dark {
+  background-color: #1d1d1d !important;
+  color: #bdbdbd;
+
+  .q-tab {
+    &--active {
+      color: $primary;
+    }
+
+    &__icon, &__label {
+      color: inherit;
+    }
+  }
+}
+
+.tabs-light {
+  background-color: white;
+  color: #616161;
+
+  .q-tab {
+    &--active {
+      color: $primary;
+    }
+
+    &__icon, &__label {
+      color: inherit;
     }
   }
 }

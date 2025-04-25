@@ -3,11 +3,11 @@
     <!-- Header Section -->
     <div class="row items-center q-mb-lg">
       <div class="col">
-        <h4 class="q-my-none text-weight-bold">{{ $t('rent.title') }}</h4>
-        <p class="text-grey-8 q-mt-sm">{{ $t('rent.manage') }}</p>
+        <h4 class="q-my-none text-weight-bold">{{ t('rent.title') }}</h4>
+        <p class="text-grey-8 q-mt-sm">{{ t('rent.manage') }}</p>
       </div>
       <div class="col-auto">
-        <q-btn color="primary" icon-right="refresh" :label="$t('app.refresh')" flat @click="refreshData" :loading="isLoading" />
+        <q-btn color="primary" icon-right="refresh" :label="t('app.refresh')" flat @click="refreshData" :loading="isLoading" />
       </div>
     </div>
 
@@ -16,11 +16,11 @@
       <div class="col-12 col-sm-3">
         <q-card class="bg-primary text-white stat-card">
           <q-card-section>
-            <div class="text-h6">{{ $t('rent.totalPayments') }}</div>
+            <div class="text-h6">{{ t('rent.totalPayments') }}</div>
             <div class="text-h3 q-mt-sm q-mb-xs">{{ formatCurrency(rentPaymentStore.totalPayments) }}</div>
             <div class="text-caption text-white-8">
               <q-icon name="payments" size="16px" class="q-mr-xs" />
-              <span>{{ $t('rent.allTime') }}</span>
+              <span>{{ t('rent.allTime') }}</span>
             </div>
           </q-card-section>
         </q-card>
@@ -28,7 +28,7 @@
       <div class="col-12 col-sm-3">
         <q-card class="bg-secondary text-white stat-card">
           <q-card-section>
-            <div class="text-h6">{{ $t('rent.thisMonth') }}</div>
+            <div class="text-h6">{{ t('rent.thisMonth') }}</div>
             <div class="text-h3 q-mt-sm q-mb-xs">{{ formatCurrency(currentMonthTotal) }}</div>
             <div class="text-caption text-white-8">
               <q-icon name="event" size="16px" class="q-mr-xs" />
@@ -40,25 +40,11 @@
       <div class="col-12 col-sm-3">
         <q-card class="bg-accent text-white stat-card">
           <q-card-section>
-            <div class="text-h6">{{ $t('tenants.title') }}</div>
+            <div class="text-h6">{{ t('tenants.title') }}</div>
             <div class="text-h3 q-mt-sm q-mb-xs">{{ propertyStore.tenants.length }}</div>
             <div class="text-caption text-white-8">
               <q-icon name="people" size="16px" class="q-mr-xs" />
-              <span>{{ $t('rent.totalTenants') }}</span>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-      <div class="col-12 col-sm-3">
-        <q-card class="bg-positive text-white stat-card">
-          <q-card-section>
-            <div class="text-h6">{{ $t('properties.title') }}</div>
-            <div class="text-h3 q-mt-sm q-mb-xs">{{ propertyStore.properties.length }}</div>
-            <div class="text-caption text-white-8">
-              <q-icon name="apartment" size="16px" class="q-mr-xs" />
-              <span>
-                <q-btn flat dense size="sm" color="white" :label="$t('properties.add')" @click="showAddPropertyDialog = true" />
-              </span>
+              <span>{{ t('rent.totalTenants') }}</span>
             </div>
           </q-card-section>
         </q-card>
@@ -69,7 +55,7 @@
     <div class="row q-mb-md">
       <div class="col-12 col-md-6">
         <q-select v-model="selectedBuilding" :options="buildingStore.buildings" option-value="id" option-label="name"
-          :label="$t('rent.filterByBuilding')" outlined dense emit-value map-options clearable :loading="buildingStore.loading"
+          :label="t('rent.filterByBuilding')" outlined dense emit-value map-options clearable :loading="buildingStore.loading"
           @update:model-value="filterByBuilding">
           <template v-slot:prepend>
             <q-icon name="apartment" />
@@ -77,13 +63,13 @@
           <template v-slot:no-option>
             <q-item>
               <q-item-section class="text-grey">
-                {{ $t('rent.noBuildings') }}
+                {{ t('rent.noBuildings') }}
               </q-item-section>
             </q-item>
           </template>
           <template v-slot:after>
             <q-btn round dense flat icon="add" @click="showAddBuildingDialog = true">
-              <q-tooltip>{{ $t('rent.addBuilding') }}</q-tooltip>
+              <q-tooltip>{{ t('rent.addBuilding') }}</q-tooltip>
             </q-btn>
           </template>
         </q-select>
@@ -93,39 +79,35 @@
     <!-- Main Content -->
     <div class="row">
       <div class="col-12">
-        <q-card v-if="activeView === 'tenants'" class="q-mb-md">
-          <q-card-section>
-            <div class="row items-center justify-between q-mb-md">
-              <div class="col">
-                <div class="text-h6">
-                  {{ selectedBuilding ? $t('rent.tenantsIn', { building: getBuildingName(selectedBuilding) }) : $t('rent.allTenants') }}
-                </div>
-              </div>
-              <div class="col-auto">
-                <q-btn color="primary" icon="person_add" :label="$t('tenants.add')" @click="showAddTenantDialog = true" />
+        <div v-if="activeView === 'tenants'" class="tenant-container q-mb-md">
+          <div class="row items-center justify-between q-mb-md q-px-md q-pt-md">
+            <div class="col">
+              <div class="text-h6">
+                {{ selectedBuilding ? t('rent.tenantsIn', { building: getBuildingName(selectedBuilding) }) : t('rent.allTenants') }}
               </div>
             </div>
-            <tenant-list :building-id="selectedBuilding" @record-payment="openPaymentDialog"
-              @view-payment-history="viewPaymentHistory" />
-          </q-card-section>
-        </q-card>
-
-        <q-card v-if="activeView === 'payment-history'" class="q-mb-md">
-          <q-card-section>
-            <div class="row items-center q-mb-md">
-              <div class="col">
-                <q-btn icon="arrow_back" flat color="primary" :label="$t('rent.backToTenants')" @click="activeView = 'tenants'" />
-              </div>
-              <div class="col-auto">
-                <q-btn color="primary" icon="add_circle" :label="$t('rent.recordPayment')"
-                  @click="openPaymentDialog(selectedTenant)" />
-              </div>
+            <div class="col-auto">
+              <q-btn color="primary" icon="person_add" :label="t('tenants.add')" @click="showAddTenantDialog = true" />
             </div>
+          </div>
+          <tenant-list :building-id="selectedBuilding" @record-payment="openPaymentDialog"
+            @view-payment-history="viewPaymentHistory" />
+        </div>
 
-            <payment-history v-if="selectedTenant" :tenant="selectedTenant" @record-payment="openPaymentDialogWithMonth"
-              @refresh="refreshData" />
-          </q-card-section>
-        </q-card>
+        <div v-if="activeView === 'payment-history'" class="tenant-container q-mb-md">
+          <div class="row items-center q-mb-md q-px-md q-pt-md">
+            <div class="col">
+              <q-btn icon="arrow_back" flat color="primary" :label="t('rent.backToTenants')" @click="activeView = 'tenants'" />
+            </div>
+            <div class="col-auto">
+              <q-btn color="primary" icon="add_circle" :label="t('rent.recordPayment')"
+                @click="openPaymentDialog(selectedTenant!)" />
+            </div>
+          </div>
+
+          <payment-history v-if="selectedTenant" :tenant="selectedTenant" @record-payment="openPaymentDialogWithMonth"
+            @refresh="refreshData" />
+        </div>
       </div>
     </div>
 
@@ -133,7 +115,7 @@
     <q-dialog v-model="showPaymentDialog" persistent maximized>
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ $t('rent.recordPayment') }}</div>
+          <div class="text-h6">{{ t('rent.recordPayment') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
@@ -149,7 +131,7 @@
     <q-dialog v-model="showAddTenantDialog" persistent maximized>
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ $t('tenants.add') }}</div>
+          <div class="text-h6">{{ t('tenants.add') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
@@ -164,7 +146,7 @@
     <q-dialog v-model="showAddPropertyDialog" persistent maximized>
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ $t('properties.add') }}</div>
+          <div class="text-h6">{{ t('properties.add') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
@@ -179,7 +161,7 @@
     <q-dialog v-model="showAddBuildingDialog" persistent maximized>
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ $t('rent.addBuilding') }}</div>
+          <div class="text-h6">{{ t('rent.addBuilding') }}</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
@@ -208,7 +190,7 @@ import { useContractStore } from 'src/stores/contract-store';
 import { useBuildingStore } from 'src/stores/building-store';
 import type { Tenant } from 'src/models/property';
 
-useI18n(); // Initialize i18n
+const { t } = useI18n();
 
 const $q = useQuasar();
 const rentPaymentStore = useRentPaymentStore();
@@ -220,6 +202,7 @@ const showPaymentDialog = ref(false);
 const showAddTenantDialog = ref(false);
 const showAddPropertyDialog = ref(false);
 const showAddBuildingDialog = ref(false);
+
 const selectedTenant = ref<Tenant | null>(null);
 const selectedBuilding = ref<string | null>(null);
 const activeView = ref('tenants'); // 'tenants' or 'payment-history'
@@ -262,7 +245,7 @@ async function refreshData() {
     console.error('Error refreshing data:', error);
     $q.notify({
       color: 'negative',
-      message: $t('app.error'),
+      message: t('app.error'),
       icon: 'error'
     });
   } finally {
@@ -310,7 +293,7 @@ async function onPaymentAdded() {
 
     $q.notify({
       color: 'positive',
-      message: $t('rent.paymentSuccess'),
+      message: t('rent.paymentSuccess'),
       icon: 'check_circle',
       position: 'top'
     });
@@ -318,7 +301,7 @@ async function onPaymentAdded() {
     console.error('Error refreshing after payment:', error);
     $q.notify({
       color: 'negative',
-      message: $t('rent.paymentRecordedError'),
+      message: t('rent.paymentRecordedError'),
       icon: 'error',
       position: 'top'
     });
@@ -331,7 +314,7 @@ function onTenantAdded(): void {
 
   $q.notify({
     color: 'positive',
-    message: $t('tenants.addSuccess'),
+    message: t('tenants.addSuccess'),
     icon: 'check_circle',
     position: 'top'
   });
@@ -343,7 +326,7 @@ function onPropertyAdded(): void {
 
   $q.notify({
     color: 'positive',
-    message: $t('properties.addSuccess'),
+    message: t('properties.addSuccess'),
     icon: 'check_circle',
     position: 'top'
   });
@@ -355,7 +338,7 @@ function onBuildingAdded(): void {
 
   $q.notify({
     color: 'positive',
-    message: $t('rent.buildingAddSuccess'),
+    message: t('rent.buildingAddSuccess'),
     icon: 'check_circle',
     position: 'top'
   });
@@ -400,9 +383,20 @@ function formatCurrency(value: number): string {
   }
 }
 
+.tenant-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
 .body--dark {
   .text-grey-8 {
     color: #bdbdbd !important;
+  }
+
+  .tenant-container {
+    background: #1d1d1d;
   }
 }
 </style>
