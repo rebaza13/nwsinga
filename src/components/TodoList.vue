@@ -28,7 +28,7 @@
         </q-item>
 
         <q-item v-if="taskStore.tasks.length === 0" class="text-center text-grey q-py-md">
-          <q-item-section>No tasks yet. Add one!</q-item-section>
+          <q-item-section>{{ $t('tasks.noTasks') }}</q-item-section>
         </q-item>
       </q-list>
     </q-card-section>
@@ -37,12 +37,12 @@
     <q-dialog v-model="showAddTask">
       <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">New Task</div>
+          <div class="text-h6">{{ $t('tasks.newTask') }}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-input v-model="newTask.title" label="Task title" autofocus @keyup.enter="addTask" />
-          <q-input v-model="newTask.due" label="Due date" class="q-mt-md">
+          <q-input v-model="newTask.title" :label="$t('tasks.taskTitle')" autofocus @keyup.enter="addTask" />
+          <q-input v-model="newTask.due" :label="$t('tasks.dueDate')" class="q-mt-md">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -51,14 +51,14 @@
               </q-icon>
             </template>
           </q-input>
-          <q-select v-model="newTask.priority" :options="['low', 'medium', 'high']" label="Priority" class="q-mt-md">
+          <q-select v-model="newTask.priority" :options="['low', 'medium', 'high']" :label="$t('tasks.priority')" class="q-mt-md">
             <template v-slot:option="{ itemProps, opt }">
               <q-item v-bind="itemProps">
                 <q-item-section>
                   <q-item-label>
                     <q-badge :color="opt === 'high' ? 'negative' : opt === 'medium' ? 'warning' : 'grey'"
                       text-color="white" class="q-mr-sm">
-                      {{ opt }}
+                      {{ $t(`tasks.${opt}`) }}
                     </q-badge>
                   </q-item-label>
                 </q-item-section>
@@ -68,8 +68,8 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn flat label="Add task" color="primary" @click="addTask" v-close-popup />
+          <q-btn flat :label="$t('app.cancel')" color="primary" v-close-popup />
+          <q-btn flat :label="$t('tasks.addTask')" color="primary" @click="addTask" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -78,8 +78,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useTaskStore } from 'src/stores/task-store';
 import type { Task } from 'src/models/property';
+
+useI18n(); // Initialize i18n without extracting t
 
 const taskStore = useTaskStore();
 const showAddTask = ref(false);

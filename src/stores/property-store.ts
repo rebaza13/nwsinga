@@ -8,6 +8,7 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { db } from 'src/boot/firebase';
+import { useRentPaymentStore } from './rent-payment-store';
 
 export const usePropertyStore = defineStore('property', () => {
   const { getCollection, addDocument, updateDocument, deleteDocument } = useFirebase();
@@ -50,8 +51,19 @@ export const usePropertyStore = defineStore('property', () => {
     error.value = null;
 
     try {
+      // Get the rent payment store to ensure we have rent payment data
+      const rentPaymentStore = useRentPaymentStore();
+
+      // Fetch properties
       const data = await getCollection('properties');
       properties.value = data as Property[];
+
+      // Ensure rent payments are loaded before calculating dashboard stats
+      if (rentPaymentStore.rentPayments.length === 0) {
+        await rentPaymentStore.fetchRentPayments();
+      }
+
+      // Calculate dashboard stats with the updated data
       calculateDashboardStats();
     } catch (err) {
       console.error('Error fetching properties:', err);
@@ -187,20 +199,25 @@ export const usePropertyStore = defineStore('property', () => {
     // For demo purposes, we'll calculate some stats based on the data we have
     // In a real app, you might want to do this on the server side
 
+    // Get the rent payment store to access actual payment data
+    const rentPaymentStore = useRentPaymentStore();
+
     // Calculate total properties
     dashboardStats.value.totalProperties = properties.value.length;
 
     // Calculate active contracts (rented properties)
     dashboardStats.value.activeContracts = properties.value.filter(p => p.status === 'rented').length;
 
-    // Calculate total rental income (sum of all prices for rented properties)
-    // For properties that are rented, we'll use price as the annual rent, and divide by 12 for monthly
-    dashboardStats.value.totalRentalIncome = properties.value
-      .filter(p => p.status === 'rented')
-      .reduce((sum, p) => sum + (p.price / 12), 0);
+    // Calculate total rental income from actual rent payments
+    dashboardStats.value.totalRentalIncome = rentPaymentStore.totalPayments;
 
-    // For demo purposes, set last month income to 90% of current
-    dashboardStats.value.lastMonthIncome = Math.round(dashboardStats.value.totalRentalIncome * 0.9);
+    // For last month income, use the current month's total from rent payments
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const currentMonth = `${year}-${month}`;
+
+    dashboardStats.value.lastMonthIncome = rentPaymentStore.totalPaymentsByMonth[currentMonth] || 0;
 
     // Count properties created in the last 30 days
     const thirtyDaysAgo = new Date();
@@ -219,6 +236,9 @@ export const usePropertyStore = defineStore('property', () => {
 
   // Initialize with sample data if in development
   async function initializeWithSampleData() {
+    // Get the rent payment store
+    const rentPaymentStore = useRentPaymentStore();
+
     // Check if we already have data
     const propertiesSnapshot = await getDocs(collection(db, 'properties'));
     if (!propertiesSnapshot.empty) return;
@@ -312,6 +332,12 @@ export const usePropertyStore = defineStore('property', () => {
 
     // Fetch the properties we just added
     await fetchProperties();
+
+    // Initialize rent payment store with sample data
+    await rentPaymentStore.initializeWithSampleData();
+
+    // Recalculate dashboard stats with the updated rent payment data
+    calculateDashboardStats();
   }
 
   return {

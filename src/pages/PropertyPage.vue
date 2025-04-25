@@ -208,9 +208,9 @@ async function deleteProperty() {
   }
 }
 
-function onPropertyAdded() {
+function onPropertyAdded(): void {
   showAddPropertyDialog.value = false;
-  refreshData();
+  void refreshData(); // Use void operator to explicitly ignore the promise
 
   $q.notify({
     color: 'positive',
@@ -219,9 +219,9 @@ function onPropertyAdded() {
   });
 }
 
-function onPropertyUpdated() {
+function onPropertyUpdated(): void {
   showAddPropertyDialog.value = false;
-  refreshData();
+  void refreshData(); // Use void operator to explicitly ignore the promise
 
   $q.notify({
     color: 'positive',

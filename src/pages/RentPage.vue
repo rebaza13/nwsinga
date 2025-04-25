@@ -322,9 +322,9 @@ async function onPaymentAdded() {
   }
 }
 
-function onTenantAdded() {
+function onTenantAdded(): void {
   showAddTenantDialog.value = false;
-  refreshData();
+  void refreshData(); // Use void operator to explicitly ignore the promise
 
   $q.notify({
     color: 'positive',
@@ -334,9 +334,9 @@ function onTenantAdded() {
   });
 }
 
-function onPropertyAdded() {
+function onPropertyAdded(): void {
   showAddPropertyDialog.value = false;
-  refreshData();
+  void refreshData(); // Use void operator to explicitly ignore the promise
 
   $q.notify({
     color: 'positive',
@@ -346,9 +346,9 @@ function onPropertyAdded() {
   });
 }
 
-function onBuildingAdded() {
+function onBuildingAdded(): void {
   showAddBuildingDialog.value = false;
-  refreshData();
+  void refreshData(); // Use void operator to explicitly ignore the promise
 
   $q.notify({
     color: 'positive',
@@ -362,7 +362,7 @@ function getBuildingName(buildingId: string): string {
   return buildingStore.getBuildingName(buildingId);
 }
 
-function filterByBuilding(buildingId: string | null) {
+function filterByBuilding(buildingId: string | null): void {
   console.log('Filtering by building:', buildingId);
   selectedBuilding.value = buildingId;
 
@@ -372,7 +372,7 @@ function filterByBuilding(buildingId: string | null) {
   }
 
   // Refresh data to ensure we have the latest
-  refreshData();
+  void refreshData(); // Use void operator to explicitly ignore the promise
 }
 
 function formatCurrency(value: number): string {

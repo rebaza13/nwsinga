@@ -42,11 +42,12 @@ export default {
   // Dashboard
   dashboard: {
     title: 'داشبۆرد',
-    welcome: 'بەخێربێیت بۆ بەڕێوەبردنی موڵک',
+    welcome: 'بەخێربێیتەوە!',
+    overview: 'ئەمە کورتەیەکە لە موڵکە بەکرێدراوەکانت',
     quickActions: 'کرداری خێرا',
     recentActivities: 'چالاکییە نوێیەکان',
     stats: 'ئامارەکان',
-    tasks: 'ئەرکەکان',
+    tasks: 'ئەرکەکانم',
     addProperty: 'زیادکردنی موڵک',
     addTenant: 'زیادکردنی کرێچی',
     recordPayment: 'تۆمارکردنی پارەدان',
@@ -182,5 +183,25 @@ export default {
     primary: 'سەرەکی',
     secondary: 'لاوەکی',
     accent: 'جەختکردنەوە'
+  },
+
+  // Tasks
+  tasks: {
+    title: 'ئەرکەکان',
+    newTask: 'ئەرکی نوێ',
+    taskTitle: 'ناونیشانی ئەرک',
+    dueDate: 'بەرواری کۆتایی',
+    priority: 'گرنگی',
+    addTask: 'زیادکردنی ئەرک',
+    noTasks: 'هیچ ئەرکێک نییە. یەکێک زیاد بکە!',
+    low: 'نزم',
+    medium: 'مامناوەند',
+    high: 'بەرز'
+  },
+
+  // Activities
+  activities: {
+    title: 'چالاکییەکان',
+    noActivities: 'هیچ چالاکییەکی نوێ نییە بۆ پیشاندان.'
   }
 };

@@ -42,11 +42,12 @@ export default {
   // Dashboard
   dashboard: {
     title: 'Dashboard',
-    welcome: 'Welcome to Property Management',
+    welcome: 'Welcome back!',
+    overview: 'Here\'s an overview of your rental properties',
     quickActions: 'Quick Actions',
     recentActivities: 'Recent Activities',
     stats: 'Statistics',
-    tasks: 'Tasks',
+    tasks: 'My Tasks',
     addProperty: 'Add Property',
     addTenant: 'Add Tenant',
     recordPayment: 'Record Payment',
@@ -182,5 +183,25 @@ export default {
     primary: 'Primary',
     secondary: 'Secondary',
     accent: 'Accent'
+  },
+
+  // Tasks
+  tasks: {
+    title: 'Tasks',
+    newTask: 'New Task',
+    taskTitle: 'Task title',
+    dueDate: 'Due date',
+    priority: 'Priority',
+    addTask: 'Add task',
+    noTasks: 'No tasks yet. Add one!',
+    low: 'Low',
+    medium: 'Medium',
+    high: 'High'
+  },
+
+  // Activities
+  activities: {
+    title: 'Activities',
+    noActivities: 'No recent activities to display.'
   }
 };

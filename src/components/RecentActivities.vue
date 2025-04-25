@@ -9,7 +9,7 @@
         </q-timeline-entry>
 
         <div v-if="activityStore.activities.length === 0" class="text-center text-grey q-py-md">
-          No recent activities to display.
+          {{ $t('activities.noActivities') }}
         </div>
       </q-timeline>
     </q-card-section>
@@ -18,7 +18,10 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useActivityStore } from 'src/stores/activity-store';
+
+useI18n(); // Initialize i18n without extracting t
 
 const activityStore = useActivityStore();
 
