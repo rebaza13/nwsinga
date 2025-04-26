@@ -21,12 +21,11 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
+
 import StatCard from './StatCard.vue';
 import { usePropertyStore } from 'src/stores/property-store';
 
 const propertyStore = usePropertyStore();
-const { t } = useI18n();
 
 onMounted(async () => {
   // Initialize with sample data if empty
