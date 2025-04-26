@@ -25,10 +25,9 @@
         <div class="form-section__title">Property Information</div>
         <div class="form-grid">
           <!-- Building -->
-          <q-select v-model="form.buildingId" :options="buildingOptions" label="Building *"
-            option-label="label" option-value="value" map-options emit-value
-            outlined dense :rules="[val => !!val || 'Building is required']"
-            @update:model-value="onBuildingChange">
+          <q-select v-model="form.buildingId" :options="buildingOptions" label="Building *" option-label="label"
+            option-value="value" map-options emit-value outlined dense
+            :rules="[val => !!val || 'Building is required']">
             <template v-slot:option="{ itemProps, opt }">
               <q-item v-bind="itemProps">
                 <q-item-section>
@@ -38,38 +37,9 @@
             </template>
           </q-select>
 
-          <!-- Property -->
-          <q-select v-model="form.propertyId" :options="filteredProperties" label="Property *"
-            option-label="label" option-value="value" map-options emit-value
-            outlined dense :rules="[val => !!val || 'Property is required']"
-            :disable="!form.buildingId">
-            <template v-slot:option="{ itemProps, opt }">
-              <q-item v-bind="itemProps">
-                <q-item-section>
-                  <q-item-label>{{ opt.label }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No properties available for this building
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
 
-          <!-- Property Type -->
-          <q-select v-model="form.propertyType" :options="['House', 'Apartment', 'Shop']" label="Property Type *"
-            outlined dense :rules="[val => !!val || 'Property type is required']">
-            <template v-slot:option="{ itemProps, opt }">
-              <q-item v-bind="itemProps">
-                <q-item-section>
-                  <q-item-label>{{ opt }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
+
+
         </div>
       </div>
 
@@ -130,7 +100,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
-import { usePropertyStore } from 'src/stores/property-store';
 import { useBuildingStore } from 'src/stores/building-store';
 import type { Tenant } from 'src/models/property';
 
@@ -147,7 +116,6 @@ const emit = defineEmits<{
 }>();
 
 const $q = useQuasar();
-const propertyStore = usePropertyStore();
 const buildingStore = useBuildingStore();
 const loading = ref(false);
 
@@ -157,8 +125,6 @@ const form = ref({
   email: '',
   phone: '',
   buildingId: props.buildingId || '',
-  propertyId: '',
-  propertyType: 'Apartment', // One of: 'House', 'Apartment', 'Shop'
   leaseStart: new Date().toISOString().split('T')[0],
   leaseEnd: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
   monthlyRent: 1000,
@@ -173,40 +139,17 @@ const buildingOptions = computed(() => {
   }));
 });
 
-// Filtered properties based on selected building
-const filteredProperties = computed(() => {
-  if (!form.value.buildingId) return [];
-
-  return propertyStore.properties
-    .filter(property => property.buildingId === form.value.buildingId)
-    .map(property => ({
-      label: property.name,
-      value: property.id
-    }));
-});
-
-// Load buildings and properties
+// Load buildings
 onMounted(async () => {
   if (buildingStore.buildings.length === 0) {
     await buildingStore.fetchBuildings();
   }
 
-  if (propertyStore.properties.length === 0) {
-    await propertyStore.fetchProperties();
-  }
-
-  // If buildingId is provided, filter properties
+  // If buildingId is provided, set it in the form
   if (props.buildingId) {
     form.value.buildingId = props.buildingId;
   }
 });
-
-// Handle building change
-function onBuildingChange(_: string) {
-  console.log(_)
-  // Reset property selection when building changes
-  form.value.propertyId = '';
-}
 
 async function submitTenant() {
   loading.value = true;
@@ -217,15 +160,15 @@ async function submitTenant() {
       email: form.value.email,
       phone: form.value.phone,
       buildingId: form.value.buildingId,
-      propertyId: form.value.propertyId,
-      propertyType: form.value.propertyType,
       leaseStart: form.value.leaseStart,
       leaseEnd: form.value.leaseEnd,
-      monthlyRent: form.value.monthlyRent
+      monthlyRent: form.value.monthlyRent,
+      notes: form.value.notes
     };
 
     // Add tenant to Firestore
-    await propertyStore.addTenant(newTenant);
+    console.log('Submitting tenant:', newTenant);
+    await buildingStore.addTenant(newTenant);
 
     $q.notify({
       color: 'positive',
@@ -239,8 +182,6 @@ async function submitTenant() {
       email: '',
       phone: '',
       buildingId: props.buildingId || '',
-      propertyId: '',
-      propertyType: 'Apartment',
       leaseStart: new Date().toISOString().split('T')[0],
       leaseEnd: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
       monthlyRent: 1000,

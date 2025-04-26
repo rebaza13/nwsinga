@@ -13,17 +13,8 @@
       </div>
 
       <!-- Desktop view: Table -->
-      <q-table
-        v-if="$q.screen.gt.xs"
-        :rows="filteredContracts"
-        :columns="columns"
-        row-key="id"
-        :loading="contractStore.loading"
-        :pagination="pagination"
-        :filter="search"
-        flat
-        bordered
-      >
+      <q-table v-if="$q.screen.gt.xs" :rows="filteredContracts" :columns="columns" row-key="id"
+        :loading="contractStore.loading" :pagination="pagination" :filter="search" flat bordered>
         <template v-slot:body-cell-status="props">
           <q-td :props="props">
             <q-badge :color="props.row.isActive ? 'positive' : 'negative'">
@@ -42,20 +33,22 @@
 
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn flat round dense color="primary" icon="visibility" @click="viewContract(props.row)" />
+            <q-btn flat round dense color="primary" icon="visibility" @click="viewContract(props.row)">
+              <q-tooltip>View Contract</q-tooltip>
+            </q-btn>
+            <q-btn flat round dense color="secondary" icon="edit" @click="editContract(props.row)">
+              <q-tooltip>Edit Contract</q-tooltip>
+            </q-btn>
+            <q-btn flat round dense color="negative" icon="delete" @click="confirmDeleteContract(props.row)">
+              <q-tooltip>Delete Contract</q-tooltip>
+            </q-btn>
           </q-td>
         </template>
       </q-table>
 
       <!-- Mobile view: Cards -->
       <div v-else class="q-gutter-md">
-        <q-card
-          v-for="contract in filteredContracts"
-          :key="contract.id"
-          flat
-          bordered
-          class="contract-card q-mb-md"
-        >
+        <q-card v-for="contract in filteredContracts" :key="contract.id" flat bordered class="contract-card q-mb-md">
           <q-card-section>
             <div class="row items-center justify-between">
               <div class="text-subtitle1 text-weight-bold">{{ contract.title }}</div>
@@ -91,7 +84,9 @@
             </div>
           </q-card-section>
           <q-card-actions align="right">
-            <q-btn flat color="primary" icon="visibility" label="View Details" @click="viewContract(contract)" />
+            <q-btn flat color="primary" icon="visibility" label="View" @click="viewContract(contract)" />
+            <q-btn flat color="secondary" icon="edit" label="Edit" @click="editContract(contract)" />
+            <q-btn flat color="negative" icon="delete" label="Delete" @click="confirmDeleteContract(contract)" />
           </q-card-actions>
         </q-card>
 
@@ -246,8 +241,14 @@ const $q = useQuasar();
 const contractStore = useContractStore();
 const search = ref('');
 const showContractDetails = ref(false);
+const showEditDialog = ref(false);
+const showDeleteDialog = ref(false);
 const selectedContract = ref<Contract | null>(null);
 const isRefreshing = ref(false);
+
+const emit = defineEmits<{
+  (e: 'edit-contract', contract: Contract): void;
+}>();
 
 const pagination = ref({
   rowsPerPage: 10
@@ -318,17 +319,20 @@ async function refreshData() {
   }
 }
 
-function formatDate(date: Date | string): string {
+function formatDate(date: Date | string | any): string {
   if (!date) return '';
 
+  // Handle Firestore timestamp object
+  if (date && typeof date === 'object' && 'seconds' in date) {
+    return new Date(date.seconds * 1000).toLocaleDateString();
+  }
+
+  // Handle string date
   if (typeof date === 'string') {
-    // Handle Firestore timestamp
-    if ((date as { seconds?: number }).seconds) {
-      return new Date((date as { seconds: number }).seconds * 1000).toLocaleDateString();
-    }
     return new Date(date).toLocaleDateString();
   }
 
+  // Handle Date object
   return date.toLocaleDateString();
 }
 
@@ -362,6 +366,50 @@ function getContractTypeColor(type: string): string {
 function viewContract(contract: Contract) {
   selectedContract.value = contract;
   showContractDetails.value = true;
+}
+
+function editContract(contract: Contract) {
+  selectedContract.value = contract;
+  showEditDialog.value = true;
+  // Emit an event to the parent component to show the edit dialog
+  emit('edit-contract', contract);
+}
+
+function confirmDeleteContract(contract: Contract) {
+  selectedContract.value = contract;
+
+  $q.dialog({
+    title: 'Confirm Deletion',
+    message: `Are you sure you want to delete the contract "${contract.title}"?`,
+    cancel: true,
+    persistent: true
+  }).onOk(async () => {
+    try {
+      await deleteContract(contract.id as string);
+    } catch (error) {
+      console.error('Error deleting contract:', error);
+    }
+  });
+}
+
+async function deleteContract(id: string) {
+  try {
+    await contractStore.deleteContract(id);
+
+    $q.notify({
+      color: 'positive',
+      message: 'Contract deleted successfully',
+      icon: 'check_circle'
+    });
+  } catch (error) {
+    console.error('Error deleting contract:', error);
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to delete contract',
+      icon: 'error'
+    });
+    throw error;
+  }
 }
 </script>
 

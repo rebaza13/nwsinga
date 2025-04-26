@@ -8,59 +8,59 @@
       </q-input>
     </div>
 
-      <!-- Desktop view: Table -->
-      <q-table v-if="$q.screen.gt.xs" :rows="filteredTenants" :columns="columns" row-key="id"
-        :loading="propertyStore.loading" :pagination="pagination" :filter="search" flat bordered>
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props">
-            <q-btn flat round dense color="primary" icon="payments" @click="recordPayment(props.row)">
-              <q-tooltip>Record Payment</q-tooltip>
-            </q-btn>
-            <q-btn flat round dense color="secondary" icon="history" @click="viewPaymentHistory(props.row)">
-              <q-tooltip>Payment History</q-tooltip>
-            </q-btn>
-          </q-td>
-        </template>
-      </q-table>
+    <!-- Desktop view: Table -->
+    <q-table v-if="$q.screen.gt.xs" :rows="filteredTenants" :columns="columns" row-key="id"
+      :loading="propertyStore.loading" :pagination="pagination" :filter="search" flat bordered>
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props">
+          <q-btn flat round dense color="primary" icon="payments" @click="recordPayment(props.row)">
+            <q-tooltip>Record Payment</q-tooltip>
+          </q-btn>
+          <q-btn flat round dense color="secondary" icon="history" @click="viewPaymentHistory(props.row)">
+            <q-tooltip>Payment History</q-tooltip>
+          </q-btn>
+        </q-td>
+      </template>
+    </q-table>
 
-      <!-- Mobile view: Cards -->
-      <div v-else class="q-gutter-md">
-        <q-card v-for="tenant in filteredTenants" :key="tenant.id" flat bordered class="tenant-card q-mb-md">
-          <q-card-section>
-            <div class="text-subtitle1 text-weight-bold">{{ tenant.name }}</div>
-            <div class="text-caption">{{ tenant.email }}</div>
-            <div class="text-caption">{{ tenant.phone }}</div>
+    <!-- Mobile view: Cards -->
+    <div v-else class="q-gutter-md">
+      <q-card v-for="tenant in filteredTenants" :key="tenant.id" flat bordered class="tenant-card q-mb-md">
+        <q-card-section>
+          <div class="text-subtitle1 text-weight-bold">{{ tenant.name }}</div>
+          <div class="text-caption">{{ tenant.email }}</div>
+          <div class="text-caption">{{ tenant.phone }}</div>
 
-            <q-separator class="q-my-sm" />
+          <q-separator class="q-my-sm" />
 
-            <div class="row q-mt-sm">
-              <div class="col-12">
-                <div class="text-caption text-grey">Property</div>
-                <div class="text-body2">{{ getPropertyName(tenant.propertyId) }}</div>
-              </div>
+          <div class="row q-mt-sm">
+            <div class="col-12">
+              <div class="text-caption text-grey">Monthly Rent</div>
+              <div class="text-body2">${{ tenant.monthlyRent.toLocaleString() }}</div>
             </div>
-            <div class="row q-mt-sm">
-              <div class="col-6">
-                <div class="text-caption text-grey">Lease Start</div>
-                <div class="text-body2">{{ formatDate(tenant.leaseStart) }}</div>
-              </div>
-              <div class="col-6">
-                <div class="text-caption text-grey">Lease End</div>
-                <div class="text-body2">{{ formatDate(tenant.leaseEnd) }}</div>
-              </div>
+          </div>
+          <div class="row q-mt-sm">
+            <div class="col-6">
+              <div class="text-caption text-grey">Lease Start</div>
+              <div class="text-body2">{{ formatDate(tenant.leaseStart) }}</div>
             </div>
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn flat color="primary" icon="payments" label="Record Payment" @click="recordPayment(tenant)" />
-            <q-btn flat color="secondary" icon="history" label="History" @click="viewPaymentHistory(tenant)" />
-          </q-card-actions>
-        </q-card>
+            <div class="col-6">
+              <div class="text-caption text-grey">Lease End</div>
+              <div class="text-body2">{{ formatDate(tenant.leaseEnd) }}</div>
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat color="primary" icon="payments" label="Record Payment" @click="recordPayment(tenant)" />
+          <q-btn flat color="secondary" icon="history" label="History" @click="viewPaymentHistory(tenant)" />
+        </q-card-actions>
+      </q-card>
 
-        <div v-if="filteredTenants.length === 0" class="text-center q-pa-md text-grey">
-          <q-icon name="search_off" size="48px" class="q-mb-md" />
-          <div>No tenants found.</div>
-        </div>
+      <div v-if="filteredTenants.length === 0" class="text-center q-pa-md text-grey">
+        <q-icon name="search_off" size="48px" class="q-mb-md" />
+        <div>No tenants found.</div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -88,12 +88,12 @@ const columns = [
   { name: 'email', label: 'Email', field: 'email', sortable: true, align: 'left' },
   { name: 'phone', label: 'Phone', field: 'phone', sortable: true, align: 'left' },
   {
-    name: 'property',
-    label: 'Property',
-    field: 'propertyId',
+    name: 'monthlyRent',
+    label: 'Monthly Rent',
+    field: 'monthlyRent',
     sortable: true,
     align: 'left',
-    format: (val: string) => getPropertyName(val)
+    format: (val: number) => `$${val.toLocaleString()}`
   },
   {
     name: 'leaseStart',
@@ -125,10 +125,8 @@ const filteredTenants = computed(() => {
   // Filter by building if a building is selected
   if (props.buildingId) {
     tenants = tenants.filter(tenant => {
-      // Get the property for this tenant
-      const property = propertyStore.properties.find(p => p.id === tenant.propertyId);
-      // Check if the property belongs to the selected building
-      return property?.buildingId === props.buildingId;
+      // Check if the tenant belongs to the selected building directly
+      return tenant.buildingId === props.buildingId;
     });
   }
 
@@ -139,27 +137,17 @@ const filteredTenants = computed(() => {
   return tenants.filter(tenant =>
     tenant.name.toLowerCase().includes(searchLower) ||
     tenant.email.toLowerCase().includes(searchLower) ||
-    tenant.phone.toLowerCase().includes(searchLower) ||
-    getPropertyName(tenant.propertyId).toLowerCase().includes(searchLower)
+    tenant.phone.toLowerCase().includes(searchLower)
   );
 });
 
 onMounted(async () => {
-  if (propertyStore.properties.length === 0) {
-    await propertyStore.fetchProperties();
-  }
-
   if (propertyStore.tenants.length === 0) {
     await propertyStore.fetchTenants();
   }
 });
 
-function getPropertyName(propertyId?: string): string {
-  if (!propertyId) return 'Not Assigned';
 
-  const property = propertyStore.properties.find(p => p.id === propertyId);
-  return property ? property.name : 'Unknown Property';
-}
 
 function formatDate(date: Date | string): string {
   if (!date) return '';

@@ -7,7 +7,8 @@
         <p class="text-grey-8 q-mt-sm">{{ t('rent.manage') }}</p>
       </div>
       <div class="col-auto">
-        <q-btn color="primary" icon-right="refresh" :label="t('app.refresh')" flat @click="refreshData" :loading="isLoading" />
+        <q-btn color="primary" icon-right="refresh" :label="t('app.refresh')" flat @click="refreshData"
+          :loading="isLoading" />
       </div>
     </div>
 
@@ -55,8 +56,8 @@
     <div class="row q-mb-md">
       <div class="col-12 col-md-6">
         <q-select v-model="selectedBuilding" :options="buildingStore.buildings" option-value="id" option-label="name"
-          :label="t('rent.filterByBuilding')" outlined dense emit-value map-options clearable :loading="buildingStore.loading"
-          @update:model-value="filterByBuilding">
+          :label="t('rent.filterByBuilding')" outlined dense emit-value map-options clearable
+          :loading="buildingStore.loading" @update:model-value="filterByBuilding">
           <template v-slot:prepend>
             <q-icon name="apartment" />
           </template>
@@ -83,7 +84,8 @@
           <div class="row items-center justify-between q-mb-md q-px-md q-pt-md">
             <div class="col">
               <div class="text-h6">
-                {{ selectedBuilding ? t('rent.tenantsIn', { building: getBuildingName(selectedBuilding) }) : t('rent.allTenants') }}
+                {{ selectedBuilding ? t('rent.tenantsIn', { building: getBuildingName(selectedBuilding) }) :
+                  t('rent.allTenants') }}
               </div>
             </div>
             <div class="col-auto">
@@ -97,7 +99,8 @@
         <div v-if="activeView === 'payment-history'" class="tenant-container q-mb-md">
           <div class="row items-center q-mb-md q-px-md q-pt-md">
             <div class="col">
-              <q-btn icon="arrow_back" flat color="primary" :label="t('rent.backToTenants')" @click="activeView = 'tenants'" />
+              <q-btn icon="arrow_back" flat color="primary" :label="t('rent.backToTenants')"
+                @click="activeView = 'tenants'" />
             </div>
             <div class="col-auto">
               <q-btn color="primary" icon="add_circle" :label="t('rent.recordPayment')"
@@ -142,20 +145,7 @@
       </q-card>
     </q-dialog>
 
-    <!-- Add Property Dialog -->
-    <q-dialog v-model="showAddPropertyDialog" persistent maximized>
-      <q-card>
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ t('properties.add') }}</div>
-          <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <property-form @property-added="onPropertyAdded" @cancel="showAddPropertyDialog = false" />
-        </q-card-section>
-      </q-card>
-    </q-dialog>
 
     <!-- Add Building Dialog -->
     <q-dialog v-model="showAddBuildingDialog" persistent maximized>
@@ -182,7 +172,6 @@ import TenantList from 'src/components/TenantList.vue';
 import RentPaymentForm from 'src/components/RentPaymentForm.vue';
 import PaymentHistory from 'src/components/PaymentHistory.vue';
 import TenantForm from 'src/components/TenantForm.vue';
-import PropertyForm from 'src/components/PropertyForm.vue';
 import BuildingForm from 'src/components/BuildingForm.vue';
 import { useRentPaymentStore } from 'src/stores/rent-payment-store';
 import { usePropertyStore } from 'src/stores/property-store';
@@ -200,7 +189,6 @@ const buildingStore = useBuildingStore();
 const isLoading = ref(false);
 const showPaymentDialog = ref(false);
 const showAddTenantDialog = ref(false);
-const showAddPropertyDialog = ref(false);
 const showAddBuildingDialog = ref(false);
 
 const selectedTenant = ref<Tenant | null>(null);
@@ -320,17 +308,7 @@ function onTenantAdded(): void {
   });
 }
 
-function onPropertyAdded(): void {
-  showAddPropertyDialog.value = false;
-  void refreshData(); // Use void operator to explicitly ignore the promise
 
-  $q.notify({
-    color: 'positive',
-    message: t('properties.addSuccess'),
-    icon: 'check_circle',
-    position: 'top'
-  });
-}
 
 function onBuildingAdded(): void {
   showAddBuildingDialog.value = false;

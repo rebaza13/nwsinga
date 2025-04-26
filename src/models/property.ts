@@ -28,9 +28,11 @@ export interface Tenant {
   name: string;
   email: string;
   phone: string;
-  propertyType: 'House' | 'Apartment' | 'Shop'; // Property type field
+  buildingId: string;
   leaseStart: Date | string;
   leaseEnd: Date | string;
+  monthlyRent: number;
+  notes?: string;
   createdAt: Date | string;
   updatedAt: Date | string;
 }

@@ -7,7 +7,8 @@
         <p class="text-grey-8 q-mt-sm">{{ $t('contracts.manage') }}</p>
       </div>
       <div class="col-auto">
-        <q-btn color="primary" icon-right="refresh" :label="$t('app.refresh')" flat @click="refreshData" :loading="isLoading" />
+        <q-btn color="primary" icon-right="refresh" :label="$t('app.refresh')" flat @click="refreshData"
+          :loading="isLoading" />
       </div>
     </div>
 
@@ -57,19 +58,20 @@
       <q-btn color="primary" icon="add_circle" :label="$t('contracts.add')" @click="showAddContractDialog = true" />
     </div>
 
-    <contract-list />
+    <contract-list @edit-contract="onEditContract" />
 
     <!-- Add Contract Dialog -->
     <q-dialog v-model="showAddContractDialog" persistent maximized>
       <q-card>
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">{{ $t('contracts.add') }}</div>
+          <div class="text-h6">{{ isEditing ? $t('contracts.edit') : $t('contracts.add') }}</div>
           <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
+          <q-btn icon="close" flat round dense v-close-popup @click="resetForm" />
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <contract-form @contract-added="onContractAdded" />
+          <contract-form :contract="editingContract" :isEditing="isEditing" @contract-added="onContractAdded"
+            @contract-updated="onContractUpdated" @cancel="cancelForm" />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -83,6 +85,7 @@ import { useI18n } from 'vue-i18n';
 import ContractList from 'src/components/ContractListNew.vue';
 import ContractForm from 'src/components/ContractFormNew.vue';
 import { useContractStore } from 'src/stores/contract-store';
+import type { Contract } from 'src/models/property';
 
 useI18n(); // Initialize i18n
 const $q = useQuasar();
@@ -90,6 +93,8 @@ const $q = useQuasar();
 const contractStore = useContractStore();
 const showAddContractDialog = ref(false);
 const isLoading = ref(false);
+const editingContract = ref<Contract | null>(null);
+const isEditing = ref(false);
 
 onMounted(async () => {
   await refreshData();
@@ -117,6 +122,7 @@ function formatCurrency(value: number): string {
 
 async function onContractAdded() {
   showAddContractDialog.value = false;
+  resetForm();
   await refreshData();
 
   // Show success notification
@@ -126,6 +132,36 @@ async function onContractAdded() {
     icon: 'check_circle',
     position: 'top'
   });
+}
+
+async function onContractUpdated() {
+  showAddContractDialog.value = false;
+  resetForm();
+  await refreshData();
+
+  // Show success notification
+  $q.notify({
+    color: 'positive',
+    message: $t('contracts.updateSuccess'),
+    icon: 'check_circle',
+    position: 'top'
+  });
+}
+
+function onEditContract(contract: Contract) {
+  editingContract.value = contract;
+  isEditing.value = true;
+  showAddContractDialog.value = true;
+}
+
+function resetForm() {
+  editingContract.value = null;
+  isEditing.value = false;
+}
+
+function cancelForm() {
+  showAddContractDialog.value = false;
+  resetForm();
 }
 </script>
 
