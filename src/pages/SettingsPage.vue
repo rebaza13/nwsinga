@@ -44,7 +44,8 @@
                 <q-item tag="label" class="q-py-md">
                   <q-item-section>
                     <q-item-label>{{ $t('settings.theme') }}</q-item-label>
-                    <q-item-label caption>{{ isDark ? $t('settings.darkMode') : $t('settings.lightMode') }}</q-item-label>
+                    <q-item-label caption>{{ isDark ? $t('settings.darkMode') : $t('settings.lightMode')
+                    }}</q-item-label>
                   </q-item-section>
                   <q-item-section side>
                     <q-toggle v-model="isDark" @update:model-value="toggleDarkMode" color="primary"
@@ -153,7 +154,7 @@
 <script setup lang="ts">
 import { useDarkMode } from 'src/composables/useDarkMode';
 import { useI18n } from 'vue-i18n';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { usePropertyStore } from 'src/stores/property-store';
 import { useContractStore } from 'src/stores/contract-store';
@@ -263,6 +264,23 @@ function saveSettings() {
 const currentLang = localStorage.getItem('language') || 'en-US';
 document.dir = currentLang === 'ckb' ? 'rtl' : 'ltr';
 $q.lang.rtl = currentLang === 'ckb';
+
+// Listen for dark mode changes from other components
+onMounted(() => {
+  // Force dark mode application on mount
+  if (isDark) {
+    document.body.classList.add('body--dark');
+  } else {
+    document.body.classList.remove('body--dark');
+  }
+
+  // Listen for dark mode changes
+  window.addEventListener('dark-mode-changed', () => {
+    // The isDark ref will be updated by the useDarkMode composable
+    // Just ensure the UI is updated
+    $q.dark.set(isDark);
+  });
+});
 </script>
 
 <style lang="scss" scoped>

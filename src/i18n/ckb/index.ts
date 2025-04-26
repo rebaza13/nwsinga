@@ -52,7 +52,13 @@ export default {
     addProperty: 'زیادکردنی موڵک',
     addTenant: 'زیادکردنی کرێچی',
     recordPayment: 'تۆمارکردنی پارەدان',
-    generateReport: 'دروستکردنی ڕاپۆرت'
+    generateReport: 'دروستکردنی ڕاپۆرت',
+    totalRentalIncome: 'کۆی داهاتی کرێ',
+    lastMonth: 'مانگی پێشوو: {amount}',
+    totalProperties: 'کۆی موڵکەکان',
+    newThisMonth: '{count} نوێ لەم مانگەدا',
+    activeContracts: 'گرێبەستە چالاکەکان',
+    renewalsPending: '{count} نوێکردنەوە چاوەڕوانە'
   },
 
   // Properties

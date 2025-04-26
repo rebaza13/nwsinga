@@ -20,9 +20,9 @@
     </q-page-container>
 
     <q-footer :class="[
-        'safe-area-bottom',
-        isDark ? 'footer-dark' : 'footer-light'
-      ]">
+      'safe-area-bottom',
+      isDark ? 'footer-dark' : 'footer-light'
+    ]">
       <q-tabs v-model="currentTab" active-color="primary" indicator-color="primary"
         :class="isDark ? 'tabs-dark' : 'tabs-light'" align="justify" narrow-indicator>
         <q-route-tab name="home" to="/" class="tab-item">
@@ -65,21 +65,56 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch, onBeforeMount } from 'vue';
 import { useDarkMode } from 'src/composables/useDarkMode';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
+import { useRoute } from 'vue-router';
 
 const $q = useQuasar();
 useI18n(); // Initialize i18n
+const route = useRoute();
 const currentTab = ref('home');
 const { isDark, toggleDarkMode } = useDarkMode();
 
-// Initialize RTL setting based on current language
+// Update current tab based on route
+watch(() => route.path, (path) => {
+  if (path === '/') currentTab.value = 'home';
+  else if (path.startsWith('/contracts')) currentTab.value = 'contracts';
+  else if (path.startsWith('/rent')) currentTab.value = 'rent';
+  else if (path.startsWith('/properties')) currentTab.value = 'properties';
+  else if (path.startsWith('/settings')) currentTab.value = 'settings';
+}, { immediate: true });
+
+// Initialize dark mode and RTL setting
+onBeforeMount(() => {
+  // Force dark mode application
+  $q.dark.set(isDark);
+
+  // Update body class
+  if (isDark) {
+    document.body.classList.add('body--dark');
+  } else {
+    document.body.classList.remove('body--dark');
+  }
+});
+
 onMounted(() => {
+  // Initialize RTL setting based on current language
   const currentLang = localStorage.getItem('language') || 'en-US';
   document.dir = currentLang === 'ckb' ? 'rtl' : 'ltr';
   $q.lang.rtl = currentLang === 'ckb';
+
+  // Listen for dark mode changes from other components
+  window.addEventListener('dark-mode-changed', (event) => {
+    const isDarkMode = (event as CustomEvent).detail;
+    // Force update UI elements that might not react to the dark mode change
+    if (isDarkMode) {
+      document.body.classList.add('body--dark');
+    } else {
+      document.body.classList.remove('body--dark');
+    }
+  });
 });
 </script>
 
@@ -157,7 +192,8 @@ onMounted(() => {
       color: $primary;
     }
 
-    &__icon, &__label {
+    &__icon,
+    &__label {
       color: inherit;
     }
   }
@@ -172,7 +208,8 @@ onMounted(() => {
       color: $primary;
     }
 
-    &__icon, &__label {
+    &__icon,
+    &__label {
       color: inherit;
     }
   }

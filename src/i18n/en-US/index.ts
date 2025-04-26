@@ -52,7 +52,13 @@ export default {
     addProperty: 'Add Property',
     addTenant: 'Add Tenant',
     recordPayment: 'Record Payment',
-    generateReport: 'Generate Report'
+    generateReport: 'Generate Report',
+    totalRentalIncome: 'Total Rental Income',
+    lastMonth: 'Last month: {amount}',
+    totalProperties: 'Total Properties',
+    newThisMonth: '{count} new this month',
+    activeContracts: 'Active Contracts',
+    renewalsPending: '{count} renewals pending'
   },
 
   // Properties
