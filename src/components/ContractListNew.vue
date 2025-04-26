@@ -48,7 +48,8 @@
 
       <!-- Mobile view: Cards -->
       <div v-else class="q-gutter-md">
-        <q-card v-for="contract in filteredContracts" :key="contract.id" flat bordered class="contract-card q-mb-md">
+        <q-card v-for="(contract, index) in filteredContracts" :key="contract.id || index" flat bordered
+          class="contract-card q-mb-md">
           <q-card-section>
             <div class="row items-center justify-between">
               <div class="text-subtitle1 text-weight-bold">{{ contract.title }}</div>
@@ -242,7 +243,6 @@ const contractStore = useContractStore();
 const search = ref('');
 const showContractDetails = ref(false);
 const showEditDialog = ref(false);
-const showDeleteDialog = ref(false);
 const selectedContract = ref<Contract | null>(null);
 const isRefreshing = ref(false);
 
@@ -255,34 +255,34 @@ const pagination = ref({
 });
 
 const columns = [
-  { name: 'title', label: 'Contract Title', field: 'title', sortable: true, align: 'left' },
-  { name: 'contractType', label: 'Type', field: 'contractType', sortable: true, align: 'center' },
+  { name: 'title', label: 'Contract Title', field: 'title', sortable: true, align: 'left' as const },
+  { name: 'contractType', label: 'Type', field: 'contractType', sortable: true, align: 'center' as const },
   {
     name: 'startDate',
     label: 'Start Date',
     field: 'startDate',
     sortable: true,
-    align: 'left',
-    format: (val: Date | string) => formatDate(val)
+    align: 'left' as const,
+    format: (val: Date | string | { seconds: number }) => formatDate(val)
   },
   {
     name: 'endDate',
     label: 'End Date',
     field: 'endDate',
     sortable: true,
-    align: 'left',
-    format: (val: Date | string) => formatDate(val)
+    align: 'left' as const,
+    format: (val: Date | string | { seconds: number }) => formatDate(val)
   },
   {
     name: 'amount',
     label: 'Amount',
     field: 'amount',
     sortable: true,
-    align: 'right',
+    align: 'right' as const,
     format: (val: number) => formatCurrency(val)
   },
-  { name: 'status', label: 'Status', field: 'isActive', sortable: true, align: 'center' },
-  { name: 'actions', label: 'Actions', field: 'actions', align: 'center' }
+  { name: 'status', label: 'Status', field: 'isActive', sortable: true, align: 'center' as const },
+  { name: 'actions', label: 'Actions', field: 'actions', align: 'center' as const }
 ];
 
 const filteredContracts = computed(() => {
@@ -319,7 +319,7 @@ async function refreshData() {
   }
 }
 
-function formatDate(date: Date | string | any): string {
+function formatDate(date: Date | string | { seconds: number }): string {
   if (!date) return '';
 
   // Handle Firestore timestamp object
@@ -383,12 +383,11 @@ function confirmDeleteContract(contract: Contract) {
     message: `Are you sure you want to delete the contract "${contract.title}"?`,
     cancel: true,
     persistent: true
-  }).onOk(async () => {
-    try {
-      await deleteContract(contract.id as string);
-    } catch (error) {
+  }).onOk(() => {
+    // Use void to explicitly ignore the promise
+    void deleteContract(contract.id as string).catch(error => {
       console.error('Error deleting contract:', error);
-    }
+    });
   });
 }
 
