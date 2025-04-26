@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { onMounted, onBeforeMount } from 'vue';
 import { useQuasar } from 'quasar';
-import { useDarkMode } from 'src/composables/useDarkMode';
+import { useDarkMode, useDarkModeStore } from 'src/composables/useDarkMode';
 
 const $q = useQuasar();
 const { isDark } = useDarkMode();
@@ -46,5 +46,26 @@ onMounted(() => {
 
   // Force dark mode application
   $q.dark.set(isDark);
+
+  // Add a global event listener for dark mode toggle
+  window.addEventListener('keydown', (event) => {
+    // Ctrl+Shift+D to toggle dark mode
+    if (event.ctrlKey && event.shiftKey && event.key === 'D') {
+      const darkModeStore = useDarkModeStore();
+      darkModeStore.toggleDarkMode();
+
+      // Force immediate update
+      $q.dark.set(darkModeStore.isDark);
+
+      // Update body class
+      if (darkModeStore.isDark) {
+        document.body.classList.add('body--dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.body.classList.remove('body--dark');
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    }
+  });
 });
 </script>

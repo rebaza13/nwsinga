@@ -53,7 +53,7 @@
 
         <!-- Amount -->
         <div class="col-12 col-md-6 q-pr-md q-mb-md">
-          <q-input v-model.number="form.amount" label="Amount *" type="number" outlined dense prefix="$" :rules="[
+          <q-input v-model.number="form.amount" label="Amount (IQD) *" type="number" outlined dense suffix="IQD" :rules="[
             val => !!val || 'Amount is required',
             val => val > 0 || 'Amount must be greater than 0'
           ]" />
@@ -96,6 +96,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRentPaymentStore } from 'src/stores/rent-payment-store';
 import type { Tenant, RentPayment } from 'src/models/property';
+import { formatMonthYear } from 'src/utils/format-utils';
 
 const props = defineProps<{
   tenant: Tenant;
@@ -114,7 +115,7 @@ const loading = ref(false);
 // Computed properties
 const tenantName = computed(() => props.tenant.name);
 const propertyName = computed(() => {
-  return props.tenant.propertyType || 'Unknown Property Type';
+  return `Building ${props.tenant.buildingId || 'Unknown'}`;
 });
 
 // No contract check needed
@@ -161,14 +162,7 @@ function getCurrentMonth() {
   return `${year}-${month}`;
 }
 
-function formatMonthYear(monthStr: string) {
-  if (!monthStr) return '';
-
-  const [year, month] = monthStr.split('-');
-  const date = new Date(parseInt(year), parseInt(month) - 1, 1);
-
-  return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
-}
+// formatMonthYear is now imported from src/utils/format-utils
 
 function generateReceiptNumber() {
   return `REC-${Math.floor(1000 + Math.random() * 9000)}`;

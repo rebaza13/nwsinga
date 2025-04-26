@@ -6,7 +6,22 @@ export const useDarkModeStore = defineStore('darkMode', () => {
   const isDark = ref(false);
 
   function toggleDarkMode() {
+    // Toggle the dark mode value
     isDark.value = !isDark.value;
+
+    // Force immediate update to Quasar
+    try {
+      // Directly update the DOM for immediate visual feedback
+      if (isDark.value) {
+        document.body.classList.add('body--dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.body.classList.remove('body--dark');
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch (e) {
+      console.error('Error updating dark mode:', e);
+    }
   }
 
   function setDarkMode(value: boolean) {
@@ -71,13 +86,24 @@ export function useDarkMode() {
 
   // Sync Quasar dark mode with our store
   watch(() => darkModeStore.isDark, (isDark) => {
+    // Apply dark mode to Quasar
     $q.dark.set(isDark);
+
     // Force body class update
     if (isDark) {
       document.body.classList.add('body--dark');
     } else {
       document.body.classList.remove('body--dark');
     }
+
+    // Force update on all components by dispatching a global event
+    window.dispatchEvent(new CustomEvent('dark-mode-changed', { detail: isDark }));
+
+    // Force update CSS variables
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+
+    // Update localStorage directly to ensure persistence
+    localStorage.setItem('darkMode', JSON.stringify(isDark));
   }, { immediate: true });
 
   // Also watch Quasar's dark mode changes

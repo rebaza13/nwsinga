@@ -184,6 +184,7 @@ import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRentPaymentStore } from 'src/stores/rent-payment-store';
 import type { Tenant, RentPayment } from 'src/models/property';
+import { formatCurrency, formatDate, formatMonthYear, capitalizeFirst } from 'src/utils/format-utils';
 
 const props = defineProps<{
   tenant: Tenant;
@@ -206,7 +207,8 @@ const selectedPayment = ref<RentPayment | null>(null);
 
 // Computed properties
 const propertyName = computed(() => {
-  return props.tenant.propertyType || 'Unknown Property Type';
+  // Since tenant doesn't have a direct property reference, we'll use a generic description
+  return `Building ${props.tenant.buildingId || 'Unknown'}`;
 });
 
 const totalPayments = computed(() => {
@@ -225,7 +227,9 @@ const availableYears = computed(() => {
   payments.value.forEach(payment => {
     if (payment.paymentMonth) {
       const year = payment.paymentMonth.split('-')[0];
-      years.add(year);
+      if (year) {
+        years.add(year);
+      }
     }
   });
 
@@ -449,63 +453,11 @@ function canRecordPayment(month: string): boolean {
   }
 }
 
-function formatDate(date: Date | string | undefined): string {
-  if (!date) return '';
+// formatDate is now imported from src/utils/format-utils
 
-  if (typeof date === 'string') {
-    try {
-      // Try to parse as a date string
-      return new Date(date).toLocaleDateString();
-    } catch {
-      // If parsing fails, return empty string
-      return '';
-    }
-  }
+// formatCurrency is now imported from src/utils/format-utils
 
-  // Handle Firestore timestamp object
-  if (date && typeof date === 'object' && 'seconds' in date) {
-    return new Date((date as { seconds: number }).seconds * 1000).toLocaleDateString();
-  }
-
-  if (date instanceof Date) {
-    return date.toLocaleDateString();
-  }
-
-  return '';
-}
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(value);
-}
-
-function formatMonthYear(monthStr: string) {
-  if (!monthStr) return '';
-
-  const parts = monthStr.split('-');
-  if (parts.length !== 2) return monthStr;
-
-  const year = parts[0];
-  const month = parts[1];
-
-  if (!year || !month) return monthStr;
-
-  try {
-    const date = new Date(parseInt(year), parseInt(month) - 1, 1);
-    return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
-  } catch {
-    return monthStr;
-  }
-}
-
-function capitalizeFirst(str?: string): string {
-  if (!str) return '';
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
+// formatMonthYear and capitalizeFirst are now imported from src/utils/format-utils
 
 function viewPaymentDetails(payment: RentPayment | undefined) {
   if (!payment) return;

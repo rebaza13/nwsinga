@@ -114,6 +114,30 @@ onMounted(() => {
     } else {
       document.body.classList.remove('body--dark');
     }
+
+    // Force update header and footer classes
+    const header = document.querySelector('.q-header');
+    const footer = document.querySelector('.q-footer');
+
+    if (header) {
+      if (isDarkMode) {
+        header.classList.remove('bg-primary');
+        header.classList.add('bg-dark');
+      } else {
+        header.classList.remove('bg-dark');
+        header.classList.add('bg-primary');
+      }
+    }
+
+    if (footer) {
+      if (isDarkMode) {
+        footer.classList.remove('footer-light');
+        footer.classList.add('footer-dark');
+      } else {
+        footer.classList.remove('footer-dark');
+        footer.classList.add('footer-light');
+      }
+    }
   });
 });
 </script>
