@@ -3,25 +3,13 @@
     <div class="q-pa-md">
       <q-form @submit="submitContract" class="q-gutter-md">
         <!-- Contract Title -->
-        <q-input
-          v-model="form.title"
-          label="Contract Title *"
-          outlined
-          :rules="[val => !!val || 'Contract title is required']"
-        />
+        <q-input v-model="form.title" label="Contract Title *" outlined
+          :rules="[val => !!val || 'Contract title is required']" />
 
         <!-- Contract Type -->
-        <q-select
-          v-model="form.contractType"
-          :options="contractTypes"
-          option-label="label"
-          option-value="value"
-          label="Contract Type *"
-          outlined
-          emit-value
-          map-options
-          :rules="[val => !!val || 'Contract type is required']"
-        >
+        <q-select v-model="form.contractType" :options="contractTypes" option-label="label" option-value="value"
+          label="Contract Type *" outlined emit-value map-options
+          :rules="[val => !!val || 'Contract type is required']">
           <template v-slot:option="{ itemProps, opt }">
             <q-item v-bind="itemProps">
               <q-item-section>
@@ -32,12 +20,8 @@
         </q-select>
 
         <!-- Start Date -->
-        <q-input
-          v-model="form.startDate"
-          label="Start Date *"
-          outlined
-          :rules="[val => !!val || 'Start date is required']"
-        >
+        <q-input v-model="form.startDate" label="Start Date *" outlined
+          :rules="[val => !!val || 'Start date is required']">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -48,15 +32,10 @@
         </q-input>
 
         <!-- End Date -->
-        <q-input
-          v-model="form.endDate"
-          label="End Date *"
-          outlined
-          :rules="[
-            val => !!val || 'End date is required',
-            val => new Date(val) > new Date(form.startDate) || 'End date must be after start date'
-          ]"
-        >
+        <q-input v-model="form.endDate" label="End Date *" outlined :rules="[
+          val => !!val || 'End date is required',
+          val => new Date(val) > new Date(form.startDate) || 'End date must be after start date'
+        ]">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -67,56 +46,27 @@
         </q-input>
 
         <!-- Amount -->
-        <q-input
-          v-model.number="form.amount"
-          label="Contract Amount *"
-          type="number"
-          outlined
-          prefix="$"
-          :rules="[
-            val => !!val || 'Amount is required',
-            val => val > 0 || 'Amount must be greater than 0'
-          ]"
-        />
+        <q-input v-model.number="form.amount" label="Contract Amount *" type="number" outlined prefix="$" :rules="[
+          val => !!val || 'Amount is required',
+          val => val > 0 || 'Amount must be greater than 0'
+        ]" />
 
         <!-- Deposit Amount -->
-        <q-input
-          v-model.number="form.depositAmount"
-          label="Deposit Amount *"
-          type="number"
-          outlined
-          prefix="$"
-          :rules="[
-            val => !!val || 'Deposit amount is required',
-            val => val > 0 || 'Deposit amount must be greater than 0'
-          ]"
-        />
+        <q-input v-model.number="form.depositAmount" label="Deposit Amount *" type="number" outlined prefix="$" :rules="[
+          val => !!val || 'Deposit amount is required',
+          val => val > 0 || 'Deposit amount must be greater than 0'
+        ]" />
 
         <!-- Created By -->
-        <q-input
-          v-model="form.createdBy"
-          label="Created By *"
-          outlined
-          :rules="[val => !!val || 'Creator name is required']"
-        />
+        <q-input v-model="form.createdBy" label="Created By *" outlined
+          :rules="[val => !!val || 'Creator name is required']" />
 
         <!-- Notes -->
-        <q-input
-          v-model="form.notes"
-          label="Notes"
-          type="textarea"
-          outlined
-          autogrow
-        />
+        <q-input v-model="form.notes" label="Notes" type="textarea" outlined autogrow />
 
         <!-- Submit Button -->
         <div class="row justify-end q-mt-md">
-          <q-btn
-            label="Create Contract"
-            type="submit"
-            color="primary"
-            :loading="contractStore.loading"
-          />
+          <q-btn label="Create Contract" type="submit" color="primary" :loading="contractStore.loading" />
         </div>
       </q-form>
     </div>
